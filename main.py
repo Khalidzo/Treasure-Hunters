@@ -6,8 +6,6 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 level = Level(screen, level_map)
-surface = pygame.Surface([64,64])
-surface.fill('grey')
 
 if __name__ == '__main__':
     while True:
