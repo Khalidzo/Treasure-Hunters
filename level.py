@@ -27,15 +27,46 @@ class Level:
                     self.player.add(player)
                     
     def scroll_map(self):
-        if self.player.sprite.rect.centerx >= (7/8 * SCREEN_WIDTH) and self.player.sprite.direction.x > 0:
+        # player moving to the right of the map
+        if self.player.sprite.rect.centerx >= (4/6 * SCREEN_WIDTH) and self.player.sprite.direction.x > 0:
             self.map_shift = -self.player.sprite.player_speed
             self.player.sprite.direction.x = 0
-
-        elif self.player.sprite.rect.centerx <= (1/8 * SCREEN_WIDTH) and self.player.sprite.direction.x < 0:
+        # player moving to the left of the map
+        elif self.player.sprite.rect.centerx <= (1/6 * SCREEN_WIDTH) and self.player.sprite.direction.x < 0:
             self.map_shift = self.player.sprite.player_speed
             self.player.sprite.direction.x = 0
         else:
             self.map_shift = 0
+    
+    def vertical_collisions(self):
+        self.player.sprite.apply_gravity()
+
+         # check collision
+        for sprite in self.tile_sprites.sprites():
+            if sprite.rect.colliderect(self.player.sprite.rect):
+                if self.player.sprite.direction.y > 0:
+                    # player is falling
+                    self.player.sprite.rect.bottom = sprite.rect.top
+                    self.player.sprite.direction.y = 0
+                elif self.player.sprite.direction.y < 0:
+                    # player is hitting object while jumping
+                    self.player.sprite.rect.top = sprite.rect.bottom
+                    
+    
+    def horizontal_collisions(self):
+        self.player.sprite.rect.x += self.player.sprite.direction.x * self.player.sprite.player_speed
+
+        # check collision
+        for sprite in self.tile_sprites.sprites():
+            if sprite.rect.colliderect(self.player.sprite.rect):
+                if self.player.sprite.direction.x < 0:
+                    # player moving to the right
+                    self.player.sprite.rect.left = sprite.rect.right
+                elif self.player.sprite.direction.x > 0:
+                    # player moving to the left
+                    self.player.sprite.rect.right = sprite.rect.left
+                
+                    
         
     def run(self):
         # map
@@ -45,7 +76,13 @@ class Level:
         self.tile_sprites.update(self.map_shift)
         self.tile_sprites.draw(self.screen)
 
+        # collision detection
+        self.vertical_collisions()
+        self.horizontal_collisions()
+        
         # render player
         self.player.update()
         self.player.draw(self.screen)
+
+       
                 
