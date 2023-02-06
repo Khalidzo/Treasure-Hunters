@@ -48,9 +48,11 @@ class Level:
                     # player is falling
                     self.player.sprite.rect.bottom = sprite.rect.top
                     self.player.sprite.direction.y = 0
+                    self.player.sprite.on_ground = True
                 elif self.player.sprite.direction.y < 0:
                     # player is hitting object while jumping
                     self.player.sprite.rect.top = sprite.rect.bottom
+                    self.player.sprite.direction.y = 0
                     
     
     def horizontal_collisions(self):

@@ -1,11 +1,17 @@
 import pygame
+from scraper import import_images
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, position):
         super().__init__()
         # basic setup
-        self.image = pygame.image.load('D:\\My Programs\\Treasure Hunter\\Treasure Hunters\\Captain Clown Nose\\Sprites\\Captain Clown Nose\\Captain Clown Nose with Sword\\09-Idle Sword\\1.png')
-        self.image = pygame.transform.scale(self.image, (132, 80))
+
+        # player animation
+        self.state = 'idle'
+        self.frames = import_images('D:\My Programs\Treasure Hunter\Treasure Hunters\Captain Clown Nose\Sprites\Captain Clown Nose\Captain Clown Nose with Sword\Idle')
+        self.frame_index = 0
+        self.animate_speed = 0.15
+        self.image = self.frames[self.frame_index]
 
         # player position and movement
         self.rect = self.image.get_rect(topleft = position)
@@ -16,6 +22,8 @@ class Player(pygame.sprite.Sprite):
         # player orientation
         self.facing_right = True
         self.on_ground = True
+
+        
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -33,14 +41,19 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = 0
         
     def jump(self):
-        self.direction.y = -12
+        if self.on_ground:
+            self.direction.y = -15
+            self.on_ground = False
     
     def apply_gravity(self):
         self.direction.y += self.gravity
         self.rect.y += self.direction.y
 
     def animate(self):
-        pass
+        self.frame_index += self.animate_speed
+        if self.frame_index >= len(self.frames):
+            self.frame_index = 0
+        self.image = self.frames[int(self.frame_index)]
 
     def update(self):
         self.animate()
