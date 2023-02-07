@@ -17,7 +17,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = position)
         self.direction = pygame.math.Vector2(0,0)
         self.gravity = 0.8
-        self.player_speed = 8
+        self.player_speed = 6
+        self.collision_rect = pygame.Rect(self.rect.topleft, (50, self.rect.height))
 
         # player orientation
         self.facing_right = True
@@ -54,7 +55,7 @@ class Player(pygame.sprite.Sprite):
     
     def apply_gravity(self):
         self.direction.y += self.gravity
-        self.rect.y += self.direction.y
+        self.collision_rect.y += self.direction.y
 
     def animate(self):
         animation = self.animations[self.state]
@@ -68,8 +69,15 @@ class Player(pygame.sprite.Sprite):
         # fix orientation
         if not self.facing_right:
             self.image = pygame.transform.flip(self.image, True, False)
+            self.rect.bottomright = self.collision_rect.bottomright
         else:
             self.image = self.image
+            self.rect.bottomleft = self.collision_rect.bottomleft
+        
+        # set bottom of the rect with the bottom of img
+        if self.on_ground:
+            self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
+
         
     def update_status(self):
         if self.direction.y < 0:
