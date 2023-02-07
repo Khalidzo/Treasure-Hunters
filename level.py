@@ -68,8 +68,6 @@ class Level:
                     # player moving to the left
                     self.player.sprite.rect.right = sprite.rect.left
                 
-                    
-        
     def run(self):
         # map
         self.scroll_map()
@@ -85,6 +83,3 @@ class Level:
         # render player
         self.player.update()
         self.player.draw(self.screen)
-
-       
-                
