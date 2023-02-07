@@ -9,7 +9,8 @@ class Level:
         self.level_map = level_map
         self.map_shift = 0
         self.render_level()
-    
+
+
     def render_level(self):
         self.tile_sprites = pygame.sprite.Group()
         self.player = pygame.sprite.GroupSingle()
@@ -23,7 +24,7 @@ class Level:
                     self.tile_sprites.add(tile)
 
                 elif col == 'P':
-                    player = Player((x,y))
+                    player = Player((x,y), self.screen)
                     self.player.add(player)
                     
     def scroll_map(self):
@@ -70,8 +71,8 @@ class Level:
                     
                 elif self.player.sprite.direction.x > 0:
                     # player moving to the left
-                    self.player.sprite.collision_rect.right = sprite.rect.left
-                                               
+                    self.player.sprite.collision_rect.right = sprite.rect.left                                      
+    
     def run(self):
         # map
         self.scroll_map()
@@ -83,7 +84,8 @@ class Level:
         # collision detection
         self.vertical_collisions()
         self.horizontal_collisions()
-        
+
         # render player
         self.player.update()
         self.player.draw(self.screen)
+
