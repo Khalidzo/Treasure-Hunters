@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = position)
         self.direction = pygame.math.Vector2(0,0)
         self.gravity = 0.8
-        self.player_speed = 5
+        self.player_speed = 8
 
         # player orientation
         self.facing_right = True
@@ -49,7 +49,6 @@ class Player(pygame.sprite.Sprite):
     def jump(self):
         if self.on_ground:
             self.direction.y = -15
-            #self.state = 'jump'
             self.on_ground = False
         
     
@@ -72,13 +71,17 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image = self.image
         
-        # check movement
-        if self.direction.x != 0:
-            print(self.direction.x)
+    def update_status(self):
+        if self.direction.y < 0:
+            self.state = 'jump'
+        elif self.direction.y > self.gravity:
+            self.state = 'fall'
+        elif self.direction.x != 0 and self.on_ground:
             self.state = 'run'
-        elif self.direction.x == 0 and self.on_ground:
+        else:
             self.state = 'idle'
-            
+
     def update(self):
+        self.update_status()
         self.animate()
         self.input()

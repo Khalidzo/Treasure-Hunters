@@ -52,8 +52,7 @@ class Level:
                 elif self.player.sprite.direction.y < 0:
                     # player is hitting object while jumping
                     self.player.sprite.rect.top = sprite.rect.bottom
-                    self.player.sprite.direction.y = 0
-                    
+                    self.player.sprite.direction.y = 0      
                     
     
     def horizontal_collisions(self):
@@ -65,13 +64,11 @@ class Level:
                 if self.player.sprite.direction.x < 0:
                     # player moving to the right
                     self.player.sprite.rect.left = sprite.rect.right
-                    self.player.sprite.state = 'run'
+                    
                 elif self.player.sprite.direction.x > 0:
                     # player moving to the left
                     self.player.sprite.rect.right = sprite.rect.left
-                    self.player.sprite.state = 'run'
-
-                
+                                               
     def run(self):
         # map
         self.scroll_map()
