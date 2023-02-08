@@ -99,8 +99,12 @@ class Player(pygame.sprite.Sprite):
 
             dust_particle = self.dust_animations['run'][int(self.dust_frame_index)]
 
+           
             if self.facing_right:
-                self.screen.blit(dust_particle, self.rect.bottomleft)
+                self.screen.blit(dust_particle, (self.rect.bottomleft[0] - 15, self.rect.bottomleft[1] - 10))
+            else:
+                dust_particle = pygame.transform.flip(dust_particle, True, False)
+                self.screen.blit(dust_particle, (self.rect.bottomright[0] + 5, self.rect.bottomright[1] - 10))
 
     def update_status(self):
         if self.direction.y < 0:
