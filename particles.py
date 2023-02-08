@@ -12,7 +12,7 @@ class Particle(pygame.sprite.Sprite):
         self.frames = frames
         self.state = state
         self.image = self.frames[self.frame_index]
-        self.rect = self.image.get_rect(center = position)
+        self.rect = self.image.get_rect(center = (position[0], position[1] - 5))
     
     def animate(self):
         self.frame_index += self.animate_speed

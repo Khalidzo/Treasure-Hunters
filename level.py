@@ -81,6 +81,10 @@ class Level:
         # map
         self.scroll_map()
 
+        # dust particles
+        self.dust_sprites.update(self.map_shift)
+        self.dust_sprites.draw(self.screen)
+
         # render tiles
         self.tile_sprites.update(self.map_shift)
         self.tile_sprites.draw(self.screen)
@@ -88,10 +92,6 @@ class Level:
         # collision detection
         self.horizontal_collisions()
         self.vertical_collisions()
-
-        # dust particles
-        self.dust_sprites.update(self.map_shift)
-        self.dust_sprites.draw(self.screen)
 
         # render player
         self.player.update()
