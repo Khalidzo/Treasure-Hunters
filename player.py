@@ -3,10 +3,11 @@ from scraper import import_images
 from particles import Particle
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, position, screen):
+    def __init__(self, position, screen, create_jump_particles):
         super().__init__()
         # basic setup
         self.screen = screen
+
         # player animation
         self.import_animations()
         self.frame_index = 0
@@ -26,6 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.on_ground = True      
 
         # dust particles
+        self.create_jump_particles = create_jump_particles
         self.import_dust_animations()
         self.dust_frame_index = 0
         self.dust_animate_speed = self.animate_speed
@@ -56,16 +58,16 @@ class Player(pygame.sprite.Sprite):
         elif keys[pygame.K_a]:
             self.direction.x = -1
             self.facing_right = False
-        elif keys[pygame.K_SPACE]:
+        elif keys[pygame.K_SPACE] and self.on_ground:
             self.jump()
+            self.create_jump_particles(self.rect.midbottom)
         else:
             self.direction.x = 0
         
     def jump(self):
-        if self.on_ground:
-            self.direction.y = -15
-            self.on_ground = False 
-    
+        self.direction.y = -15
+        self.on_ground = False 
+
     def apply_gravity(self):
         self.direction.y += self.gravity
         self.collision_rect.y += self.direction.y
@@ -96,15 +98,16 @@ class Player(pygame.sprite.Sprite):
             self.dust_frame_index += self.dust_animate_speed
             if self.dust_frame_index >= len(self.dust_animations):
                 self.dust_frame_index = 0
-
             dust_particle = self.dust_animations['run'][int(self.dust_frame_index)]
 
-           
             if self.facing_right:
                 self.screen.blit(dust_particle, (self.rect.bottomleft[0] - 15, self.rect.bottomleft[1] - 10))
             else:
                 dust_particle = pygame.transform.flip(dust_particle, True, False)
                 self.screen.blit(dust_particle, (self.rect.bottomright[0] + 5, self.rect.bottomright[1] - 10))
+        
+        elif self.state == 'jump':
+            pass
 
     def update_status(self):
         if self.direction.y < 0:
@@ -117,8 +120,9 @@ class Player(pygame.sprite.Sprite):
             self.state = 'idle'
 
     def update(self):
+        self.dust_particles_animate()
         self.update_status()
         self.animate()
         self.input()
 
-        self.dust_particles_animate()
+        

@@ -2,7 +2,7 @@ import pygame
 from settings import *
 from tile import Tile
 from player import Player
-
+from particles import Particle
 class Level:
     def __init__(self, screen, level_map):
         self.screen = screen
@@ -10,6 +10,12 @@ class Level:
         self.map_shift = 0
         self.render_level()
 
+        # dust particles
+        self.dust_sprites = pygame.sprite.Group()
+
+    def create_jump_particles(self, position):
+        jump_particle_sprite = Particle(position, self.player.sprite.dust_animations['jump'], 'jump')
+        self.dust_sprites.add(jump_particle_sprite)
 
     def render_level(self):
         self.tile_sprites = pygame.sprite.Group()
@@ -24,7 +30,7 @@ class Level:
                     self.tile_sprites.add(tile)
 
                 elif col == 'P':
-                    player = Player((x,y), self.screen)
+                    player = Player((x,y), self.screen, self.create_jump_particles)
                     self.player.add(player)
                     
     def scroll_map(self):
@@ -57,8 +63,7 @@ class Level:
 
         if self.player.sprite.on_ground and self.player.sprite.direction.y < 0 or self.player.sprite.direction.y > 1:
             self.player.sprite.on_ground = False
-                    
-    
+                     
     def horizontal_collisions(self):
         self.player.sprite.collision_rect.x += self.player.sprite.direction.x * self.player.sprite.player_speed
 
@@ -67,12 +72,11 @@ class Level:
             if sprite.rect.colliderect(self.player.sprite.collision_rect):
                 if self.player.sprite.direction.x < 0:
                     # player moving to the right
-                    self.player.sprite.collision_rect.left = sprite.rect.right
-                    
+                    self.player.sprite.collision_rect.left = sprite.rect.right  
                 elif self.player.sprite.direction.x > 0:
                     # player moving to the left
-                    self.player.sprite.collision_rect.right = sprite.rect.left                                      
-    
+                    self.player.sprite.collision_rect.right = sprite.rect.left
+                                                      
     def run(self):
         # map
         self.scroll_map()
@@ -82,8 +86,12 @@ class Level:
         self.tile_sprites.draw(self.screen)
 
         # collision detection
-        self.vertical_collisions()
         self.horizontal_collisions()
+        self.vertical_collisions()
+
+        # dust particles
+        self.dust_sprites.update(self.map_shift)
+        self.dust_sprites.draw(self.screen)
 
         # render player
         self.player.update()
