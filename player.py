@@ -60,7 +60,7 @@ class Player(pygame.sprite.Sprite):
             self.facing_right = False
         elif keys[pygame.K_SPACE] and self.on_ground:
             self.jump()
-            self.create_jump_particles(self.rect.midbottom)
+            self.create_jump_particles()
         else:
             self.direction.x = 0
         
@@ -105,9 +105,6 @@ class Player(pygame.sprite.Sprite):
             else:
                 dust_particle = pygame.transform.flip(dust_particle, True, False)
                 self.screen.blit(dust_particle, (self.rect.bottomright[0] + 5, self.rect.bottomright[1] - 10))
-        
-        elif self.state == 'jump':
-            pass
 
     def update_status(self):
         if self.direction.y < 0:
@@ -124,5 +121,3 @@ class Player(pygame.sprite.Sprite):
         self.update_status()
         self.animate()
         self.input()
-
-        

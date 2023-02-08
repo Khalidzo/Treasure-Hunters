@@ -12,10 +12,22 @@ class Level:
 
         # dust particles
         self.dust_sprites = pygame.sprite.Group()
+        self.player_on_ground = False
 
-    def create_jump_particles(self, position):
-        jump_particle_sprite = Particle(position, self.player.sprite.dust_animations['jump'], 'jump')
+    def create_jump_particles(self):
+        jump_particle_sprite = Particle(self.player.sprite.rect.midbottom, self.player.sprite.dust_animations['jump'], 'jump')
         self.dust_sprites.add(jump_particle_sprite)
+
+    def create_landing_particles(self):
+        if not self.player_on_ground and self.player.sprite.on_ground and not self.dust_sprites.sprites():
+            landing_particle_sprite = Particle(self.player.sprite.rect.midbottom, self.player.sprite.dust_animations['land'], 'land')
+            self.dust_sprites.add(landing_particle_sprite)
+
+    def get_player_on_ground(self):
+        if self.player.sprite.on_ground:
+            self.player_on_ground = True
+        else:
+            self.player_on_ground = False
 
     def render_level(self):
         self.tile_sprites = pygame.sprite.Group()
@@ -52,10 +64,11 @@ class Level:
         for sprite in self.tile_sprites.sprites():
             if sprite.rect.colliderect(self.player.sprite.collision_rect):
                 if self.player.sprite.direction.y > 0:
-                    # player is falling
+                    # player is on ground/falling
                     self.player.sprite.collision_rect.bottom = sprite.rect.top
                     self.player.sprite.direction.y = 0
                     self.player.sprite.on_ground = True
+    
                 elif self.player.sprite.direction.y < 0:
                     # player is hitting object while jumping
                     self.player.sprite.collision_rect.top = sprite.rect.bottom
@@ -91,7 +104,9 @@ class Level:
 
         # collision detection
         self.horizontal_collisions()
+        self.get_player_on_ground()
         self.vertical_collisions()
+        self.create_landing_particles()
 
         # render player
         self.player.update()
