@@ -23,6 +23,7 @@ class Particle(pygame.sprite.Sprite):
         else:
             self.image = self.frames[int(self.frame_index)]
 
-    def update(self, map_shift):
+    def update(self, x_map_shift, y_map_shift):
         self.animate()
-        self.rect.x += map_shift
+        self.rect.x += x_map_shift
+        self.rect.y += y_map_shift

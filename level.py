@@ -3,10 +3,13 @@ from settings import *
 from tile import Tile
 from player import Player
 from particles import Particle
+
 class Level:
     def __init__(self, screen, level_map):
+        # basic setup
         self.screen = screen
         self.level_map = level_map
+        # level setup
         self.x_map_shift = 0
         self.y_map_shift = 0
         self.render_level()
@@ -59,14 +62,12 @@ class Level:
             self.x_map_shift = 0
     
     def scroll_map_y(self):
-        # player moving to the right of the map
-        if self.player.sprite.rect.centery >= (2/3 * SCREEN_HEIGHT) and self.player.sprite.direction.y > 0:
-            self.y_map_shift = -self.player.sprite.player_speed
-            self.player.sprite.direction.y = 0
-        # player moving to the left of the map
-        elif self.player.sprite.rect.centery <= (1/3 * SCREEN_HEIGHT) and self.player.sprite.direction.y < 0:
+        # player moving upwards
+        if self.player.sprite.rect.centery <= (1/5 * SCREEN_HEIGHT) and self.player.sprite.direction.y < 0 and not self.player.sprite.state == 'fall':
             self.y_map_shift = self.player.sprite.player_speed
-            self.player.sprite.direction.y = 0
+        # player moving downwards
+        elif self.player.sprite.rect.centery >= (1/2 * SCREEN_HEIGHT) and self.player.sprite.direction.y > 0.8 and self.player.sprite.state == 'fall':
+            self.y_map_shift = -self.player.sprite.player_speed
         else:
             self.y_map_shift = 0
         
@@ -106,9 +107,9 @@ class Level:
     def run(self):
         # map
         self.scroll_map_x()
-        #self.scroll_map_y()
+        self.scroll_map_y()
         # dust particles
-        self.dust_sprites.update(self.x_map_shift)
+        self.dust_sprites.update(self.x_map_shift, self.y_map_shift)
         self.dust_sprites.draw(self.screen)
 
         # render tiles
@@ -124,4 +125,4 @@ class Level:
         # render player
         self.player.update()
         self.player.draw(self.screen)
-
+        #print(self.player.sprite.direction.y
