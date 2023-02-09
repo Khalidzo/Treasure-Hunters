@@ -10,11 +10,10 @@ class Particle(pygame.sprite.Sprite):
 
         # image and shape
         self.frames = frames
-        self.state = state
         self.image = self.frames[self.frame_index]
-        if self.state == 'jump':
+        if state == 'jump':
             self.rect = self.image.get_rect(center = (position[0], position[1] - 7))
-        else:
+        elif state == 'land':
             self.rect = self.image.get_rect(center = (position[0], position[1] - 10))  
     
     def animate(self):

@@ -7,7 +7,8 @@ class Level:
     def __init__(self, screen, level_map):
         self.screen = screen
         self.level_map = level_map
-        self.map_shift = 0
+        self.x_map_shift = 0
+        self.y_map_shift = 0
         self.render_level()
 
         # dust particles
@@ -45,18 +46,30 @@ class Level:
                     player = Player((x,y), self.screen, self.create_jump_particles)
                     self.player.add(player)
                     
-    def scroll_map(self):
+    def scroll_map_x(self):
         # player moving to the right of the map
         if self.player.sprite.rect.centerx >= (2/3 * SCREEN_WIDTH) and self.player.sprite.direction.x > 0:
-            self.map_shift = -self.player.sprite.player_speed
+            self.x_map_shift = -self.player.sprite.player_speed
             self.player.sprite.direction.x = 0
         # player moving to the left of the map
         elif self.player.sprite.rect.centerx <= (1/3 * SCREEN_WIDTH) and self.player.sprite.direction.x < 0:
-            self.map_shift = self.player.sprite.player_speed
+            self.x_map_shift = self.player.sprite.player_speed
             self.player.sprite.direction.x = 0
         else:
-            self.map_shift = 0
+            self.x_map_shift = 0
     
+    def scroll_map_y(self):
+        # player moving to the right of the map
+        if self.player.sprite.rect.centery >= (2/3 * SCREEN_HEIGHT) and self.player.sprite.direction.y > 0:
+            self.y_map_shift = -self.player.sprite.player_speed
+            self.player.sprite.direction.y = 0
+        # player moving to the left of the map
+        elif self.player.sprite.rect.centery <= (1/3 * SCREEN_HEIGHT) and self.player.sprite.direction.y < 0:
+            self.y_map_shift = self.player.sprite.player_speed
+            self.player.sprite.direction.y = 0
+        else:
+            self.y_map_shift = 0
+        
     def vertical_collisions(self):
         self.player.sprite.apply_gravity()
 
@@ -92,14 +105,14 @@ class Level:
                                                       
     def run(self):
         # map
-        self.scroll_map()
-
+        self.scroll_map_x()
+        #self.scroll_map_y()
         # dust particles
-        self.dust_sprites.update(self.map_shift)
+        self.dust_sprites.update(self.x_map_shift)
         self.dust_sprites.draw(self.screen)
 
         # render tiles
-        self.tile_sprites.update(self.map_shift)
+        self.tile_sprites.update(self.x_map_shift, self.y_map_shift)
         self.tile_sprites.draw(self.screen)
 
         # collision detection
