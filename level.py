@@ -13,10 +13,14 @@ class Level:
         self.x_map_shift = 0
         self.y_map_shift = 0
         self.render_level()
-
         # dust particles
         self.dust_sprites = pygame.sprite.Group()
         self.player_on_ground = False
+        # camera setup
+        self.camera_top = 1/5 * SCREEN_HEIGHT
+        self.camera_bottom = 2/3 * SCREEN_HEIGHT
+        self.camera_right = 2/3 * SCREEN_WIDTH
+        self.camera_left = 1/3 * SCREEN_WIDTH
 
     def create_jump_particles(self):
         jump_particle_sprite = Particle(self.player.sprite.rect.midbottom, self.player.sprite.dust_animations['jump'], 'jump')
@@ -51,11 +55,11 @@ class Level:
                     
     def scroll_map_x(self):
         # player moving to the right of the map
-        if self.player.sprite.rect.centerx >= (2/3 * SCREEN_WIDTH) and self.player.sprite.direction.x > 0:
+        if self.player.sprite.rect.centerx >= self.camera_right and self.player.sprite.direction.x > 0:
             self.x_map_shift = -self.player.sprite.player_speed
             self.player.sprite.direction.x = 0
         # player moving to the left of the map
-        elif self.player.sprite.rect.centerx <= (1/3 * SCREEN_WIDTH) and self.player.sprite.direction.x < 0:
+        elif self.player.sprite.rect.centerx <= self.camera_left and self.player.sprite.direction.x < 0:
             self.x_map_shift = self.player.sprite.player_speed
             self.player.sprite.direction.x = 0
         else:
@@ -63,14 +67,19 @@ class Level:
     
     def scroll_map_y(self):
         # player moving upwards
-        if self.player.sprite.rect.centery <= (1/5 * SCREEN_HEIGHT) and self.player.sprite.direction.y < 0 and not self.player.sprite.state == 'fall':
+        if self.player.sprite.rect.centery <= self.camera_top and self.player.sprite.direction.y < 0:
             self.y_map_shift = self.player.sprite.player_speed
+            self.camera_top -= self.player.sprite.player_speed
+            self.camera_bottom -= self.player.sprite.player_speed
+
         # player moving downwards
-        elif self.player.sprite.rect.centery >= (1/2 * SCREEN_HEIGHT) and self.player.sprite.direction.y > 0.8 and self.player.sprite.state == 'fall':
+        elif self.player.sprite.rect.centery >= self.camera_bottom and self.player.sprite.direction.y > 0.8 and self.player.sprite.state == 'fall':
             self.y_map_shift = -self.player.sprite.player_speed
+            self.camera_top += self.player.sprite.player_speed
+            self.camera_bottom += self.player.sprite.player_speed
         else:
             self.y_map_shift = 0
-        
+
     def vertical_collisions(self):
         self.player.sprite.apply_gravity()
 
@@ -82,14 +91,16 @@ class Level:
                     self.player.sprite.collision_rect.bottom = sprite.rect.top
                     self.player.sprite.direction.y = 0
                     self.player.sprite.on_ground = True
-    
+                    self.y_current_standing_level = sprite.rect.top
                 elif self.player.sprite.direction.y < 0:
                     # player is hitting object while jumping
                     self.player.sprite.collision_rect.top = sprite.rect.bottom
                     self.player.sprite.direction.y = 0
 
+
         if self.player.sprite.on_ground and self.player.sprite.direction.y < 0 or self.player.sprite.direction.y > 1:
             self.player.sprite.on_ground = False
+
                      
     def horizontal_collisions(self):
         self.player.sprite.collision_rect.x += self.player.sprite.direction.x * self.player.sprite.player_speed
@@ -125,4 +136,3 @@ class Level:
         # render player
         self.player.update()
         self.player.draw(self.screen)
-        #print(self.player.sprite.direction.y

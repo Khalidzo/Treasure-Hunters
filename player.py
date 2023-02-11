@@ -1,5 +1,5 @@
 import pygame
-from scraper import import_images
+from utils import import_images
 from particles import Particle
 
 class Player(pygame.sprite.Sprite):
