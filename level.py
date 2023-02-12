@@ -1,27 +1,52 @@
 import pygame
 from settings import *
-from tile import Tile
+from tile import Tile, StaticTile
 from player import Player
 from particles import Particle
+from utils import import_csv, import_sliced_graphics
 
 class Level:
-    def __init__(self, screen, level_map):
+    def __init__(self, screen, level_data):
         # basic setup
         self.screen = screen
         self.level_map = level_map
-        # level setup
-        self.x_map_shift = 0
-        self.y_map_shift = 0
-        self.render_level()
+
         # dust particles
         self.dust_sprites = pygame.sprite.Group()
         self.player_on_ground = False
+
         # camera setup
         self.camera_top = 1/5 * SCREEN_HEIGHT
         self.camera_bottom = 2/3 * SCREEN_HEIGHT
         self.camera_right = 2/3 * SCREEN_WIDTH
         self.camera_left = 1/3 * SCREEN_WIDTH
 
+        # map sprites
+        terrain_layout = import_csv(level_data['terrain'])
+        self.terrain_sprites = self.create_tile_group(terrain_layout, 'terrain')
+
+        # level setup
+        self.x_map_shift = -2
+        self.y_map_shift = -1
+        #self.render_level()
+
+    def create_tile_group(self, layout, type):
+        sprite_group = pygame.sprite.Group()
+
+        for row_index, row in enumerate(layout):
+            for column_index, column in enumerate(row):
+                if column != '-1':
+                    x = column_index * TILE_SIZE
+                    y = row_index * TILE_SIZE
+
+                    if type == 'terrain':
+                        terrain_img_list = import_sliced_graphics(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Terrain\Terrain (64x64).png')
+                        sprite_img = terrain_img_list[int(column)]
+                        sprite = StaticTile((x,y), sprite_img)
+                        sprite_group.add(sprite)
+
+        return sprite_group
+    
     def create_jump_particles(self):
         jump_particle_sprite = Particle(self.player.sprite.rect.midbottom, self.player.sprite.dust_animations['jump'], 'jump')
         self.dust_sprites.add(jump_particle_sprite)
@@ -36,22 +61,6 @@ class Level:
             self.player_on_ground = True
         else:
             self.player_on_ground = False
-
-    def render_level(self):
-        self.tile_sprites = pygame.sprite.Group()
-        self.player = pygame.sprite.GroupSingle()
-
-        for row_index, row in enumerate(self.level_map):
-            for col_index, col in enumerate(row):
-                x = col_index * TILE_SIZE
-                y = row_index * TILE_SIZE
-                if col == 'X':
-                    tile = Tile((x,y))
-                    self.tile_sprites.add(tile)
-
-                elif col == 'P':
-                    player = Player((x,y), self.screen, self.create_jump_particles)
-                    self.player.add(player)
                     
     def scroll_map_x(self):
         # player moving to the right of the map
@@ -79,7 +88,6 @@ class Level:
             self.camera_bottom += self.player.sprite.player_speed
         else:
             self.y_map_shift = 0
-        print(self.player.sprite.direction.y)
 
     def vertical_collisions(self):
         self.player.sprite.apply_gravity()
@@ -101,8 +109,7 @@ class Level:
 
         if self.player.sprite.on_ground and self.player.sprite.direction.y < 0 or self.player.sprite.direction.y > 1:
             self.player.sprite.on_ground = False
-
-                     
+                   
     def horizontal_collisions(self):
         self.player.sprite.collision_rect.x += self.player.sprite.direction.x * self.player.sprite.player_speed
 
@@ -117,23 +124,24 @@ class Level:
                     self.player.sprite.collision_rect.right = sprite.rect.left
                                                       
     def run(self):
+        pass
         # map
-        self.scroll_map_x()
-        self.scroll_map_y()
+        #self.scroll_map_x()
+        #self.scroll_map_y()
         # dust particles
-        self.dust_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.dust_sprites.draw(self.screen)
+        #self.dust_sprites.update(self.x_map_shift, self.y_map_shift)
+        #self.dust_sprites.draw(self.screen)
 
         # render tiles
-        self.tile_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.tile_sprites.draw(self.screen)
+        self.terrain_sprites.update(self.x_map_shift, self.y_map_shift)
+        self.terrain_sprites.draw(self.screen)
 
         # collision detection
-        self.horizontal_collisions()
-        self.get_player_on_ground()
-        self.vertical_collisions()
-        self.create_landing_particles()
+        #self.horizontal_collisions()
+        #self.get_player_on_ground()
+        #self.vertical_collisions()
+        #self.create_landing_particles()
 
         # render player
-        self.player.update()
-        self.player.draw(self.screen)
+        #self.player.update()
+        #self.player.draw(self.screen)
