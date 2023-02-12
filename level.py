@@ -1,6 +1,6 @@
 import pygame
 from settings import *
-from tile import Tile, StaticTile, AnimatedTile, Coin
+from tile import Tile, StaticTile, AnimatedTile, Coin, Palm
 from player import Player
 from particles import Particle
 from utils import import_csv, import_sliced_graphics, import_images
@@ -28,10 +28,13 @@ class Level:
         # coin sprites
         coin_layout = import_csv(level_data['coins'])
         self.coin_sprites = self.create_tile_group(coin_layout, 'coin')
+
+        # background balms
+        bg_balm_layout = import_csv(level_data['bg_palms'])
+        self.bg_balm_sprites = self.create_tile_group(bg_balm_layout, 'bg_balm')
         # level setup
         self.x_map_shift = -2
         self.y_map_shift = -1
-        #self.render_level()
 
     def create_tile_group(self, layout, type):
         sprite_group = pygame.sprite.Group()
@@ -55,6 +58,19 @@ class Level:
                             coin_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Pirate Treasure\Sprites\coins\silver')
 
                         sprite = Coin((x,y), coin_animations)
+                        sprite_group.add(sprite)
+                    
+                    elif type == 'bg_balm':
+                        if column == '1':
+                            sprite_img = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Left 01.v1.png').convert_alpha()
+                            sprite = Palm((x,y), sprite_img, '1')
+                        elif column == '2':
+                            sprite_img = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Right 03.v1 (1).png').convert_alpha()
+                            sprite = Palm((x,y), sprite_img, '2')
+                        elif column == '3':
+                            sprite_img = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Regular 01.v1.png').convert_alpha()
+                            sprite = Palm((x,y), sprite_img, '3')
+
                         sprite_group.add(sprite)
 
         return sprite_group
@@ -144,6 +160,10 @@ class Level:
         #self.dust_sprites.update(self.x_map_shift, self.y_map_shift)
         #self.dust_sprites.draw(self.screen)
 
+        # render background balms
+        self.bg_balm_sprites.update(self.x_map_shift, self.y_map_shift)
+        self.bg_balm_sprites.draw(self.screen)
+        
         # render terrain
         self.terrain_sprites.update(self.x_map_shift, self.y_map_shift)
         self.terrain_sprites.draw(self.screen)
@@ -151,6 +171,8 @@ class Level:
         # render coins
         self.coin_sprites.update(self.x_map_shift, self.y_map_shift)
         self.coin_sprites.draw(self.screen)
+
+        
 
         # collision detection
         #self.horizontal_collisions()
