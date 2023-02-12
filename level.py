@@ -1,9 +1,9 @@
 import pygame
 from settings import *
-from tile import Tile, StaticTile
+from tile import Tile, StaticTile, AnimatedTile
 from player import Player
 from particles import Particle
-from utils import import_csv, import_sliced_graphics
+from utils import import_csv, import_sliced_graphics, import_images
 
 class Level:
     def __init__(self, screen, level_data):
@@ -21,10 +21,13 @@ class Level:
         self.camera_right = 2/3 * SCREEN_WIDTH
         self.camera_left = 1/3 * SCREEN_WIDTH
 
-        # map sprites
+        # terrain sprites
         terrain_layout = import_csv(level_data['terrain'])
         self.terrain_sprites = self.create_tile_group(terrain_layout, 'terrain')
 
+        # coin sprites
+        coin_layout = import_csv(level_data['coins'])
+        self.coin_sprites = self.create_tile_group(coin_layout, 'coin')
         # level setup
         self.x_map_shift = -2
         self.y_map_shift = -1
@@ -43,6 +46,15 @@ class Level:
                         terrain_img_list = import_sliced_graphics(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Terrain\Terrain (64x64).png')
                         sprite_img = terrain_img_list[int(column)]
                         sprite = StaticTile((x,y), sprite_img)
+                        sprite_group.add(sprite)
+                    
+                    elif type == 'coin':
+                        if column == '0':
+                            coin_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Pirate Treasure\Sprites\coins\gold')
+                        else:
+                            coin_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Pirate Treasure\Sprites\coins\silver')
+
+                        sprite = AnimatedTile((x,y), coin_animations)
                         sprite_group.add(sprite)
 
         return sprite_group
@@ -132,10 +144,13 @@ class Level:
         #self.dust_sprites.update(self.x_map_shift, self.y_map_shift)
         #self.dust_sprites.draw(self.screen)
 
-        # render tiles
+        # render terrain
         self.terrain_sprites.update(self.x_map_shift, self.y_map_shift)
         self.terrain_sprites.draw(self.screen)
 
+        # render coins
+        self.coin_sprites.update(self.x_map_shift, self.y_map_shift)
+        self.coin_sprites.draw(self.screen)
         # collision detection
         #self.horizontal_collisions()
         #self.get_player_on_ground()
