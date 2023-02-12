@@ -1,6 +1,6 @@
 import pygame
 from settings import *
-from tile import Tile, StaticTile, AnimatedTile
+from tile import Tile, StaticTile, AnimatedTile, Coin
 from player import Player
 from particles import Particle
 from utils import import_csv, import_sliced_graphics, import_images
@@ -54,7 +54,7 @@ class Level:
                         else:
                             coin_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Pirate Treasure\Sprites\coins\silver')
 
-                        sprite = AnimatedTile((x,y), coin_animations)
+                        sprite = Coin((x,y), coin_animations)
                         sprite_group.add(sprite)
 
         return sprite_group
@@ -151,6 +151,7 @@ class Level:
         # render coins
         self.coin_sprites.update(self.x_map_shift, self.y_map_shift)
         self.coin_sprites.draw(self.screen)
+
         # collision detection
         #self.horizontal_collisions()
         #self.get_player_on_ground()

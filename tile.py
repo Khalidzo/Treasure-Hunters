@@ -36,3 +36,8 @@ class AnimatedTile(Tile):
         self.animate()
         self.rect.x += x_map_shift
         self.rect.y += y_map_shift
+
+class Coin(AnimatedTile):
+    def __init__(self, position, frames):
+        super().__init__(position, frames)
+        self.rect = self.image.get_rect(center = (position[0] + TILE_SIZE/2, position[1] + + TILE_SIZE/2))
