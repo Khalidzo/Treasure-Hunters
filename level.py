@@ -71,7 +71,7 @@ class Level:
             self.y_map_shift = self.player.sprite.player_speed
             self.camera_top -= self.player.sprite.player_speed
             self.camera_bottom -= self.player.sprite.player_speed
-
+            
         # player moving downwards
         elif self.player.sprite.rect.centery >= self.camera_bottom and self.player.sprite.direction.y > 0.8 and self.player.sprite.state == 'fall':
             self.y_map_shift = -self.player.sprite.player_speed
@@ -79,6 +79,7 @@ class Level:
             self.camera_bottom += self.player.sprite.player_speed
         else:
             self.y_map_shift = 0
+        print(self.player.sprite.direction.y)
 
     def vertical_collisions(self):
         self.player.sprite.apply_gravity()
