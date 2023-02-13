@@ -18,7 +18,8 @@ level_0 = {
     'coins': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_coins.csv',
     'flag': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_flag.csv',
     'grass': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_grass.csv',
-    'background': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_background.csv'
+    'background': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_background.csv',
+    'horizon': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_horizon.csv'
 }
 TILE_SIZE = 64
 SCREEN_WIDTH = 1200

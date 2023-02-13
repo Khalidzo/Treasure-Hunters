@@ -1,5 +1,5 @@
 import pygame
-from settings import *
+from settings import SCREEN_HEIGHT,SCREEN_WIDTH, TILE_SIZE
 from tile import Tile, StaticTile, AnimatedTile, Coin, Palm
 from player import Player
 from particles import Particle
@@ -10,7 +10,7 @@ class Level:
         # basic setup
         self.screen = screen
         self.x_map_shift = -2
-        self.y_map_shift = -1
+        self.y_map_shift = -2
 
         # camera setup
         self.camera_top = 1/5 * SCREEN_HEIGHT
@@ -38,6 +38,9 @@ class Level:
         grass_layout = import_csv(level_data['grass'])
         self.grass_sprites = self.create_tile_group(grass_layout, 'grass')
         
+        # horizon sprites
+        horizon_layout = import_csv(level_data['horizon'])
+        self.horizon_sprites = self.create_tile_group(horizon_layout, 'horizon')
 
     def create_tile_group(self, layout, type):
         sprite_group = pygame.sprite.Group()
@@ -77,10 +80,17 @@ class Level:
                         sprite_group.add(sprite)
                     
                     elif type == 'grass':
-                        grass_img_list = import_sliced_graphics('D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\grass\grass.png')
+                        grass_img_list = import_sliced_graphics(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\grass\grass.png')
                         sprite_img = grass_img_list[int(column)]
                         sprite = StaticTile((x,y), sprite_img)
                         sprite_group.add(sprite)
+                    
+                    elif type == 'horizon':
+                        horizon_img_list = import_sliced_graphics(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\BG Image.png')
+                        sprite_img = horizon_img_list[int(column)]
+                        sprite = StaticTile((x,y), sprite_img)
+                        sprite_group.add(sprite)
+                        print(column)
 
         return sprite_group
     
@@ -168,16 +178,27 @@ class Level:
         #self.dust_sprites.update(self.x_map_shift, self.y_map_shift)
         #self.dust_sprites.draw(self.screen)
 
+        # render horizon
+        self.horizon_sprites.update(self.x_map_shift, self.y_map_shift)
+        self.horizon_sprites.draw(self.screen)
+
         # render grass
+
         self.grass_sprites.update(self.x_map_shift, self.y_map_shift)
         self.grass_sprites.draw(self.screen)
+
         # render background balms
         self.bg_balm_sprites.update(self.x_map_shift, self.y_map_shift)
         self.bg_balm_sprites.draw(self.screen)
 
+         # render horizon
+        self.horizon_sprites.draw(self.screen)
+
         # render terrain
         self.terrain_sprites.update(self.x_map_shift, self.y_map_shift)
         self.terrain_sprites.draw(self.screen)
+
+       
 
         # render coins
         self.coin_sprites.update(self.x_map_shift, self.y_map_shift)
