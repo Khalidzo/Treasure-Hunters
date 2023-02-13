@@ -53,4 +53,9 @@ class Palm(AnimatedTile):
         elif type == '1':
             self.rect = self.image.get_rect(center = (position[0] + 20, position[1] - 10))
 
+class WaterReflection(AnimatedTile):
+    def __init__(self, position, frames):
+        super().__init__(position, frames)
+        self.rect = self.image.get_rect(center = (position[0], position[1] + 32))
+
         

@@ -1,6 +1,6 @@
 import pygame
 from settings import SCREEN_HEIGHT,SCREEN_WIDTH, TILE_SIZE
-from tile import Tile, StaticTile, AnimatedTile, Coin, Palm
+from tile import Tile, StaticTile, AnimatedTile, Coin, Palm, WaterReflection
 from player import Player
 from particles import Particle
 from utils import import_csv, import_sliced_graphics, import_images
@@ -38,13 +38,13 @@ class Level:
         grass_layout = import_csv(level_data['grass'])
         self.grass_sprites = self.create_tile_group(grass_layout, 'grass')
         
-        # horizon sprites
-        horizon_layout = import_csv(level_data['horizon'])
-        self.horizon_sprites = self.create_tile_group(horizon_layout, 'horizon')
-
-        # sky sprites
-        sky_layout = import_csv(level_data['sky'])
-        self.sky_sprites = self.create_tile_group(sky_layout, 'sky')
+        # bg_water sprites
+        bg_water_layout = import_csv(level_data['bg_water'])
+        self.bg_water_sprites = self.create_tile_group(bg_water_layout, 'bg_water')
+        
+        # water reflection
+        water_reflect_layout = import_csv(level_data['water_reflect'])
+        self.water_reflect_sprites = self.create_tile_group(water_reflect_layout, 'water_reflect')
 
     def create_tile_group(self, layout, type):
         sprite_group = pygame.sprite.Group()
@@ -89,15 +89,15 @@ class Level:
                         sprite = StaticTile((x,y), sprite_img)
                         sprite_group.add(sprite)
                     
-                    elif type == 'horizon':
+                    elif type == 'bg_water':
                         horizon_img_list = import_sliced_graphics(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\BG Image.png')
                         sprite_img = horizon_img_list[int(column)]
                         sprite = StaticTile((x,y), sprite_img)
                         sprite_group.add(sprite)
                     
-                    elif type == 'sky':
-                        sprite_img = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\Additional Sky.v1.png').convert_alpha()
-                        sprite = StaticTile((x,y), sprite_img)
+                    elif type == 'water_reflect':
+                        water_reflect_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\Water reflect')
+                        sprite = WaterReflection((x,y), water_reflect_animations)
                         sprite_group.add(sprite)
 
         return sprite_group
@@ -187,12 +187,8 @@ class Level:
         #self.dust_sprites.draw(self.screen)
 
         # render horizon
-        self.horizon_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.horizon_sprites.draw(self.screen)
-
-        # render sky
-        #self.sky_sprites.update(self.x_map_shift, self.y_map_shift)
-        #self.sky_sprites.draw(self.screen)
+        self.bg_water_sprites.update(self.x_map_shift, self.y_map_shift)
+        self.bg_water_sprites.draw(self.screen)
 
         # render grass
         self.grass_sprites.update(self.x_map_shift, self.y_map_shift)
@@ -202,18 +198,17 @@ class Level:
         self.bg_balm_sprites.update(self.x_map_shift, self.y_map_shift)
         self.bg_balm_sprites.draw(self.screen)
 
-        # render horizon
-        self.horizon_sprites.draw(self.screen)
-
         # render terrain
         self.terrain_sprites.update(self.x_map_shift, self.y_map_shift)
         self.terrain_sprites.draw(self.screen)
 
-       
         # render coins
         self.coin_sprites.update(self.x_map_shift, self.y_map_shift)
         self.coin_sprites.draw(self.screen)
 
+        # render water reflection
+        self.water_reflect_sprites.update(self.x_map_shift, self.y_map_shift)
+        self.water_reflect_sprites.draw(self.screen)
         # collision detection
         #self.horizontal_collisions()
         #self.get_player_on_ground()
