@@ -9,11 +9,8 @@ class Level:
     def __init__(self, screen, level_data):
         # basic setup
         self.screen = screen
-        self.level_map = level_map
-
-        # dust particles
-        self.dust_sprites = pygame.sprite.Group()
-        self.player_on_ground = False
+        self.x_map_shift = -2
+        self.y_map_shift = -1
 
         # camera setup
         self.camera_top = 1/5 * SCREEN_HEIGHT
@@ -21,6 +18,10 @@ class Level:
         self.camera_right = 2/3 * SCREEN_WIDTH
         self.camera_left = 1/3 * SCREEN_WIDTH
 
+        # dust particles
+        self.dust_sprites = pygame.sprite.Group()
+        self.player_on_ground = False
+        
         # terrain sprites
         terrain_layout = import_csv(level_data['terrain'])
         self.terrain_sprites = self.create_tile_group(terrain_layout, 'terrain')
@@ -29,12 +30,14 @@ class Level:
         coin_layout = import_csv(level_data['coins'])
         self.coin_sprites = self.create_tile_group(coin_layout, 'coin')
 
-        # background balms
+        # background balms sprites
         bg_balm_layout = import_csv(level_data['bg_palms'])
         self.bg_balm_sprites = self.create_tile_group(bg_balm_layout, 'bg_balm')
-        # level setup
-        self.x_map_shift = -2
-        self.y_map_shift = -1
+
+        # grass sprites
+        grass_layout = import_csv(level_data['grass'])
+        self.grass_sprites = self.create_tile_group(grass_layout, 'grass')
+        
 
     def create_tile_group(self, layout, type):
         sprite_group = pygame.sprite.Group()
@@ -71,6 +74,12 @@ class Level:
                             sprite_img = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Regular 01.v1.png').convert_alpha()
                             sprite = Palm((x,y), sprite_img, '3')
 
+                        sprite_group.add(sprite)
+                    
+                    elif type == 'grass':
+                        grass_img_list = import_sliced_graphics('D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\grass\grass.png')
+                        sprite_img = grass_img_list[int(column)]
+                        sprite = StaticTile((x,y), sprite_img)
                         sprite_group.add(sprite)
 
         return sprite_group
@@ -152,7 +161,6 @@ class Level:
                     self.player.sprite.collision_rect.right = sprite.rect.left
                                                       
     def run(self):
-        pass
         # map
         #self.scroll_map_x()
         #self.scroll_map_y()
@@ -160,10 +168,13 @@ class Level:
         #self.dust_sprites.update(self.x_map_shift, self.y_map_shift)
         #self.dust_sprites.draw(self.screen)
 
+        # render grass
+        self.grass_sprites.update(self.x_map_shift, self.y_map_shift)
+        self.grass_sprites.draw(self.screen)
         # render background balms
         self.bg_balm_sprites.update(self.x_map_shift, self.y_map_shift)
         self.bg_balm_sprites.draw(self.screen)
-        
+
         # render terrain
         self.terrain_sprites.update(self.x_map_shift, self.y_map_shift)
         self.terrain_sprites.draw(self.screen)
@@ -171,8 +182,6 @@ class Level:
         # render coins
         self.coin_sprites.update(self.x_map_shift, self.y_map_shift)
         self.coin_sprites.draw(self.screen)
-
-        
 
         # collision detection
         #self.horizontal_collisions()
