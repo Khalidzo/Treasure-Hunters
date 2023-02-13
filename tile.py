@@ -42,12 +42,14 @@ class Coin(AnimatedTile):
         super().__init__(position, frames)
         self.rect = self.image.get_rect(center = (position[0] + TILE_SIZE/2, position[1] + TILE_SIZE/2))
 
-class Palm(StaticTile):
-    def __init__(self, position, surface, type):
-        super().__init__(position, surface)
+class Palm(AnimatedTile):
+    def __init__(self, position, type, frames):
+        super().__init__(position, frames)
         if type == '3':
             self.rect = self.image.get_rect(center = (position[0] + 20, position[1]))
         elif type == '2':
             self.rect = self.image.get_rect(center = (position[0] + 20, position[1] - 10))
         elif type == '1':
             self.rect = self.image.get_rect(center = (position[0] + 20, position[1] - 10))
+
+        

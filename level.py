@@ -42,6 +42,10 @@ class Level:
         horizon_layout = import_csv(level_data['horizon'])
         self.horizon_sprites = self.create_tile_group(horizon_layout, 'horizon')
 
+        # sky sprites
+        sky_layout = import_csv(level_data['sky'])
+        self.sky_sprites = self.create_tile_group(sky_layout, 'sky')
+
     def create_tile_group(self, layout, type):
         sprite_group = pygame.sprite.Group()
 
@@ -68,14 +72,14 @@ class Level:
                     
                     elif type == 'bg_balm':
                         if column == '1':
-                            sprite_img = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Left 01.v1.png').convert_alpha()
-                            sprite = Palm((x,y), sprite_img, '1')
+                            balm_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Left')
+                            sprite = Palm((x,y), '1', balm_animations)
                         elif column == '2':
-                            sprite_img = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Right 03.v1 (1).png').convert_alpha()
-                            sprite = Palm((x,y), sprite_img, '2')
+                            balm_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Right')
+                            sprite = Palm((x,y), '3', balm_animations)
                         elif column == '3':
-                            sprite_img = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Regular 01.v1.png').convert_alpha()
-                            sprite = Palm((x,y), sprite_img, '3')
+                            balm_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Regular')
+                            sprite = Palm((x,y), '3', balm_animations)
 
                         sprite_group.add(sprite)
                     
@@ -90,7 +94,11 @@ class Level:
                         sprite_img = horizon_img_list[int(column)]
                         sprite = StaticTile((x,y), sprite_img)
                         sprite_group.add(sprite)
-                        print(column)
+                    
+                    elif type == 'sky':
+                        sprite_img = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\Additional Sky.v1.png').convert_alpha()
+                        sprite = StaticTile((x,y), sprite_img)
+                        sprite_group.add(sprite)
 
         return sprite_group
     
@@ -182,8 +190,11 @@ class Level:
         self.horizon_sprites.update(self.x_map_shift, self.y_map_shift)
         self.horizon_sprites.draw(self.screen)
 
-        # render grass
+        # render sky
+        #self.sky_sprites.update(self.x_map_shift, self.y_map_shift)
+        #self.sky_sprites.draw(self.screen)
 
+        # render grass
         self.grass_sprites.update(self.x_map_shift, self.y_map_shift)
         self.grass_sprites.draw(self.screen)
 
@@ -191,7 +202,7 @@ class Level:
         self.bg_balm_sprites.update(self.x_map_shift, self.y_map_shift)
         self.bg_balm_sprites.draw(self.screen)
 
-         # render horizon
+        # render horizon
         self.horizon_sprites.draw(self.screen)
 
         # render terrain
@@ -199,7 +210,6 @@ class Level:
         self.terrain_sprites.draw(self.screen)
 
        
-
         # render coins
         self.coin_sprites.update(self.x_map_shift, self.y_map_shift)
         self.coin_sprites.draw(self.screen)
