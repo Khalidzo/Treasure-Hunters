@@ -1,4 +1,5 @@
 import pygame
+from random import randint
 from settings import *
 
 class Tile(pygame.sprite.Sprite):
@@ -46,7 +47,7 @@ class Palm(AnimatedTile):
     def __init__(self, position, type, frames):
         super().__init__(position, frames)
         if type == '3':
-            self.rect = self.image.get_rect(center = (position[0] + 20, position[1]))
+            self.rect = self.image.get_rect(center = (position[0] + 20, position[1] + randint(0,30)))
         elif type == '2':
             self.rect = self.image.get_rect(center = (position[0] + 20, position[1] - 10))
         elif type == '1':
