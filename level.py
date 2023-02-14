@@ -1,6 +1,6 @@
 import pygame
-from settings import SCREEN_HEIGHT,SCREEN_WIDTH, TILE_SIZE
-from tile import Tile, StaticTile, AnimatedTile, Coin, Palm, WaterReflection
+from settings import SCREEN_HEIGHT,SCREEN_WIDTH, TILE_SIZE, HORIZONTAL_TILES
+from tile import Tile, StaticTile, AnimatedTile, Coin, Palm, WaterReflection, Sky
 from player import Player
 from particles import Particle
 from utils import import_csv, import_sliced_graphics, import_images
@@ -9,8 +9,8 @@ class Level:
     def __init__(self, screen, level_data):
         # basic setup
         self.screen = screen
-        self.x_map_shift = -2
-        self.y_map_shift = -2
+        self.x_map_shift = 0
+        self.y_map_shift = 0
 
         # camera setup
         self.camera_top = 1/5 * SCREEN_HEIGHT
@@ -46,6 +46,10 @@ class Level:
         water_reflect_layout = import_csv(level_data['water_reflect'])
         self.water_reflect_sprites = self.create_tile_group(water_reflect_layout, 'water_reflect')
 
+        # decoration
+        sky_layout = import_csv(level_data['sky'])
+        self.sky_sprites = self.create_tile_group(sky_layout, 'sky')
+
     def create_tile_group(self, layout, type):
         sprite_group = pygame.sprite.Group()
 
@@ -76,7 +80,7 @@ class Level:
                             sprite = Palm((x,y), '1', balm_animations)
                         elif column == '2':
                             balm_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Right')
-                            sprite = Palm((x,y), '3', balm_animations)
+                            sprite = Palm((x,y), '2', balm_animations)
                         elif column == '3':
                             balm_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Regular')
                             sprite = Palm((x,y), '3', balm_animations)
@@ -98,6 +102,13 @@ class Level:
                     elif type == 'water_reflect':
                         water_reflect_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\Water reflect')
                         sprite = WaterReflection((x,y), water_reflect_animations)
+                        sprite_group.add(sprite)
+
+                    elif type == 'sky':
+                        sky_img_list = import_sliced_graphics(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\BG Image.v1 (2).png')
+                        sprite_img = sky_img_list[int(column)]
+                        sprite_img = pygame.transform.scale(sprite_img, (HORIZONTAL_TILES * TILE_SIZE, TILE_SIZE))
+                        sprite = Sky((x,y), sprite_img)
                         sprite_group.add(sprite)
 
         return sprite_group
@@ -182,11 +193,29 @@ class Level:
         # map
         #self.scroll_map_x()
         #self.scroll_map_y()
+
         # dust particles
         #self.dust_sprites.update(self.x_map_shift, self.y_map_shift)
         #self.dust_sprites.draw(self.screen)
 
-        # render horizon
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_d]:
+            self.x_map_shift = -4
+        elif keys[pygame.K_a]:
+            self.x_map_shift = 4
+        elif keys[pygame.K_s]:
+            self.y_map_shift = -4
+        elif keys[pygame.K_w]:
+            self.y_map_shift = 4
+        else:
+            self.x_map_shift = 0
+            self.y_map_shift = 0
+
+        # render sky
+        self.sky_sprites.update(self.y_map_shift)
+        self.sky_sprites.draw(self.screen)
+
+        # render bg water + horizon
         self.bg_water_sprites.update(self.x_map_shift, self.y_map_shift)
         self.bg_water_sprites.draw(self.screen)
 
@@ -201,15 +230,18 @@ class Level:
         # render terrain
         self.terrain_sprites.update(self.x_map_shift, self.y_map_shift)
         self.terrain_sprites.draw(self.screen)
+        
+        # render water reflection
+        self.water_reflect_sprites.update(self.x_map_shift, self.y_map_shift)
+        self.water_reflect_sprites.draw(self.screen)
 
         # render coins
         self.coin_sprites.update(self.x_map_shift, self.y_map_shift)
         self.coin_sprites.draw(self.screen)
+  
 
-        # render water reflection
-        self.water_reflect_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.water_reflect_sprites.draw(self.screen)
         # collision detection
+
         #self.horizontal_collisions()
         #self.get_player_on_ground()
         #self.vertical_collisions()

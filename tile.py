@@ -47,9 +47,9 @@ class Palm(AnimatedTile):
     def __init__(self, position, type, frames):
         super().__init__(position, frames)
         if type == '3':
-            self.rect = self.image.get_rect(center = (position[0] + 20, position[1] + randint(0,30)))
+            self.rect = self.image.get_rect(center = (position[0] + 20, position[1] + randint(0,50)))
         elif type == '2':
-            self.rect = self.image.get_rect(center = (position[0] + 20, position[1] - 10))
+            self.rect = self.image.get_rect(center = (position[0] + 30, position[1] - 15))
         elif type == '1':
             self.rect = self.image.get_rect(center = (position[0] + 20, position[1] - 10))
 
@@ -58,4 +58,12 @@ class WaterReflection(AnimatedTile):
         super().__init__(position, frames)
         self.rect = self.image.get_rect(center = (position[0], position[1] + 32))
 
-        
+class Sky(pygame.sprite.Sprite):
+    def __init__(self, position, image):
+        super().__init__()
+        self.image = image
+        self.rect = self.image.get_rect(topleft = position)
+    
+    def update(self, y_map_shift):
+        self.rect.y += y_map_shift
+
