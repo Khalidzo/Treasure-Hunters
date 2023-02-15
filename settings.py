@@ -16,12 +16,14 @@ level_0 = {
     'terrain': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_terrain.csv',
     'bg_palms': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_bg_balms.csv',
     'coins': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_coins.csv',
-    'flag': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_flag.csv',
     'grass': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_grass.csv',
-    'background': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_background.csv',
-    'horizon': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_horizon.csv',
-    'sky': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_sky.csv'
+    'bg_water': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_horizon.csv',
+    'water_reflect': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_water_reflect.csv',
+    'sky': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_sky.csv',
+    'flag': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_flag.csv'
 }
+HORIZONTAL_TILES = 90
+VERTICAL_TILES = 30
 TILE_SIZE = 64
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 720

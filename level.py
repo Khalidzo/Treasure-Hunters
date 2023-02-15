@@ -1,6 +1,6 @@
 import pygame
 from settings import SCREEN_HEIGHT,SCREEN_WIDTH, TILE_SIZE, HORIZONTAL_TILES
-from tile import Tile, StaticTile, AnimatedTile, Coin, Palm, WaterReflection, Sky
+from tile import Tile, StaticTile, AnimatedTile, Coin, Palm, WaterReflection, Sky, Flag
 from player import Player
 from particles import Particle
 from utils import import_csv, import_sliced_graphics, import_images
@@ -45,6 +45,10 @@ class Level:
         # water reflection
         water_reflect_layout = import_csv(level_data['water_reflect'])
         self.water_reflect_sprites = self.create_tile_group(water_reflect_layout, 'water_reflect')
+
+        # flag sprite
+        flag_layout = import_csv(level_data['flag'])
+        self.flag_sprite = self.create_tile_group(flag_layout, 'flag')
 
         # decoration
         sky_layout = import_csv(level_data['sky'])
@@ -109,6 +113,11 @@ class Level:
                         sprite_img = sky_img_list[int(column)]
                         sprite_img = pygame.transform.scale(sprite_img, (HORIZONTAL_TILES * TILE_SIZE, TILE_SIZE))
                         sprite = Sky((x,y), sprite_img)
+                        sprite_group.add(sprite)
+
+                    elif type == 'flag':
+                        flag_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Objects\Flag\Flag')
+                        sprite = Flag((x,y), flag_animations)
                         sprite_group.add(sprite)
 
         return sprite_group
@@ -200,9 +209,9 @@ class Level:
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_d]:
-            self.x_map_shift = -4
+            self.x_map_shift = -8
         elif keys[pygame.K_a]:
-            self.x_map_shift = 4
+            self.x_map_shift = 8
         elif keys[pygame.K_s]:
             self.y_map_shift = -4
         elif keys[pygame.K_w]:
@@ -226,6 +235,10 @@ class Level:
         # render background balms
         self.bg_balm_sprites.update(self.x_map_shift, self.y_map_shift)
         self.bg_balm_sprites.draw(self.screen)
+
+        # render flag
+        self.flag_sprite.update(self.x_map_shift, self.y_map_shift)
+        self.flag_sprite.draw(self.screen)
 
         # render terrain
         self.terrain_sprites.update(self.x_map_shift, self.y_map_shift)

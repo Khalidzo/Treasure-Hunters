@@ -67,3 +67,7 @@ class Sky(pygame.sprite.Sprite):
     def update(self, y_map_shift):
         self.rect.y += y_map_shift
 
+class Flag(AnimatedTile):
+    def __init__(self, position, frames):
+        super().__init__(position, frames)
+        self.rect = self.image.get_rect(center = (position[0] + TILE_SIZE/2, position[1] - 28))

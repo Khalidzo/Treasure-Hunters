@@ -8,7 +8,6 @@ def import_images(path):
     image_list = []
     
     for directory, dir_paths, images in walk(path):
-        print(path)
         for image in images:
             image_surface = pygame.image.load(path + '\\'  + image).convert_alpha()
             image_list.append(image_surface)   
@@ -34,7 +33,7 @@ def import_sliced_graphics(path):
         for column in range(tile_num_x):
             x = column * TILE_SIZE
             y = row * TILE_SIZE
-            sliced_surface = pygame.Surface((TILE_SIZE,TILE_SIZE))
+            sliced_surface = pygame.Surface((TILE_SIZE,TILE_SIZE), flags= pygame.SRCALPHA)
             sliced_surface.blit(surface, (0,0), pygame.Rect(x, y, TILE_SIZE, TILE_SIZE))
             sliced_tiles.append(sliced_surface)
 
