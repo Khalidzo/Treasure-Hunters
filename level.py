@@ -1,6 +1,6 @@
 import pygame
 from settings import SCREEN_HEIGHT,SCREEN_WIDTH, TILE_SIZE, HORIZONTAL_TILES, VERTICAL_TILES
-from tile import Tile, StaticTile, AnimatedTile, Coin, Palm, WaterReflection, Sky, Flag, Crate, fg_palm, Cloud
+from tile import Tile, StaticTile, AnimatedTile, Coin, Palm, WaterReflection, Sky, Flag, Crate, fg_palm, Cloud, bg_water
 from player import Player
 from particles import Particle
 from utils import import_csv, import_sliced_graphics, import_images
@@ -67,6 +67,7 @@ class Level:
         # clouds
         self.cloud_sprites = pygame.sprite.Group()
         self.cloud_imgs = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\clouds')
+        self.spawn_cloud()
 
     def create_tile_group(self, layout, type):
         sprite_group = pygame.sprite.Group()
@@ -112,9 +113,8 @@ class Level:
                         sprite_group.add(sprite)
                     
                     elif type == 'bg_water':
-                        horizon_img_list = import_sliced_graphics(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\BG Image.png')
-                        sprite_img = horizon_img_list[int(column)]
-                        sprite = StaticTile((x,y), sprite_img)
+                        sprite_img = pygame.image.load('D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\Additional Water.v1.png').convert()
+                        sprite = bg_water((x,y), sprite_img)
                         sprite_group.add(sprite)
                     
                     elif type == 'water_reflect':
@@ -164,6 +164,12 @@ class Level:
             img = choice(self.cloud_imgs)
             cloud = Cloud((randint(HORIZONTAL_TILES * TILE_SIZE, 2 * HORIZONTAL_TILES * TILE_SIZE), randint(0, VERTICAL_TILES * TILE_SIZE)), img)
             self.cloud_sprites.add(cloud)
+
+    def spawn_cloud(self):
+        img = pygame.image.load('D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\Big Clouds.png').convert_alpha()
+        img = pygame.transform.scale2x(img)
+        cloud = Cloud((500, (VERTICAL_TILES - 4) * TILE_SIZE), img)
+        self.cloud_sprites.add(cloud)
 
     def get_player_on_ground(self):
         if self.player.sprite.on_ground:

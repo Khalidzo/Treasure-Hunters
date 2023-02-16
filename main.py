@@ -8,7 +8,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 level = Level(screen, level_0)
 cloud_event = pygame.USEREVENT + 1
-pygame.time.set_timer(cloud_event, 4000)
+pygame.time.set_timer(cloud_event, 3000)
 
 if __name__ == '__main__':
     while True:
