@@ -2,6 +2,7 @@ import pygame
 from settings import SCREEN_HEIGHT,SCREEN_WIDTH, TILE_SIZE, HORIZONTAL_TILES, VERTICAL_TILES
 from tile import Tile, StaticTile, AnimatedTile, Coin, Palm, WaterReflection, Sky, Flag, Crate, fg_palm, Cloud, bg_water
 from player import Player
+from enemies import Crabby
 from particles import Particle
 from utils import import_csv, import_sliced_graphics, import_images
 from random import randint, choice
@@ -67,7 +68,11 @@ class Level:
         # clouds
         self.cloud_sprites = pygame.sprite.Group()
         self.cloud_imgs = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\clouds')
-        self.spawn_cloud()
+
+        # enemies
+        self.crabby_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\The Crusty Crew\Sprites\Crabby\Run (scaled)')
+        self.enemy_layout = import_csv(level_data['enemies'])
+        self.enemy_sprites = self.create_tile_group(self.enemy_layout, 'enemy')
 
     def create_tile_group(self, layout, type):
         sprite_group = pygame.sprite.Group()
@@ -147,7 +152,10 @@ class Level:
                             balm_animations = import_images('D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\palm_small')
                             sprite = fg_palm((x,y), balm_animations, '1')
                         sprite_group.add(sprite)
-
+                    
+                    elif type == 'enemy':
+                        sprite = Crabby((x,y), self.crabby_animations)
+                        sprite_group.add(sprite)
         return sprite_group
     
     def create_jump_particles(self):
@@ -164,12 +172,6 @@ class Level:
             img = choice(self.cloud_imgs)
             cloud = Cloud((randint(HORIZONTAL_TILES * TILE_SIZE, 2 * HORIZONTAL_TILES * TILE_SIZE), randint(0, VERTICAL_TILES * TILE_SIZE)), img)
             self.cloud_sprites.add(cloud)
-
-    def spawn_cloud(self):
-        img = pygame.image.load('D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\Big Clouds.png').convert_alpha()
-        img = pygame.transform.scale2x(img)
-        cloud = Cloud((500, (VERTICAL_TILES - 4) * TILE_SIZE), img)
-        self.cloud_sprites.add(cloud)
 
     def get_player_on_ground(self):
         if self.player.sprite.on_ground:
@@ -291,6 +293,14 @@ class Level:
         # render crates 
         self.crate_sprites.update(self.x_map_shift, self.y_map_shift)
         self.crate_sprites.draw(self.screen)
+        
+        # render coins
+        self.coin_sprites.update(self.x_map_shift, self.y_map_shift)
+        self.coin_sprites.draw(self.screen)
+
+        # render enemies
+        self.enemy_sprites.update(self.x_map_shift, self.y_map_shift)
+        self.enemy_sprites.draw(self.screen)
 
         # render fg balms
         self.fg_balm_sprites.update(self.x_map_shift, self.y_map_shift)
@@ -300,9 +310,6 @@ class Level:
         self.terrain_sprites.update(self.x_map_shift, self.y_map_shift)
         self.terrain_sprites.draw(self.screen)
 
-        # render coins
-        self.coin_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.coin_sprites.draw(self.screen)
 
         # collision detection
 

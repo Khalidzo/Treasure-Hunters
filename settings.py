@@ -22,7 +22,8 @@ level_0 = {
     'water_reflect': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_water_reflect.csv',
     'sky': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_sky.csv',
     'flag': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_flag.csv',
-    'crate': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_crates.csv'
+    'crate': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_crates.csv',
+    'enemies': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_enemies.csv'
 }
 HORIZONTAL_TILES = 90
 VERTICAL_TILES = 30
