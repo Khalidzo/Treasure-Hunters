@@ -1,17 +1,3 @@
-level_map = [
-'                            ',
-'                            ',
-'                            ',
-' XX    XXX            XX    ',
-' XX P                       ',
-' XXXX         XX         XX ',
-' XXXX       XX              ',
-' XX    X  XXXX    XX  XX    ',
-'       X  XXXX    XX  XXX   ',
-'    XXXX  XXXXXX  XX  XXXX  ',
-'XXXXXXXX  XXXXXX  XX  XXXX  ']
-
-
 level_0 = {
     'terrain': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_terrain.csv',
     'bg_palms': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_bg_balms.csv',
@@ -23,8 +9,10 @@ level_0 = {
     'sky': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_sky.csv',
     'flag': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_flag.csv',
     'crate': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_crates.csv',
-    'enemies': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_enemies.csv'
+    'enemies': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_enemies.csv',
+    'borders': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_borders.csv'
 }
+
 HORIZONTAL_TILES = 90
 VERTICAL_TILES = 30
 TILE_SIZE = 64

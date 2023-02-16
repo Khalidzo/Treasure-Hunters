@@ -74,6 +74,10 @@ class Level:
         self.enemy_layout = import_csv(level_data['enemies'])
         self.enemy_sprites = self.create_tile_group(self.enemy_layout, 'enemy')
 
+        # borders
+        self.border_layout = import_csv(level_data['borders'])
+        self.border_sprites = self.create_tile_group(self.border_layout, 'border')
+
     def create_tile_group(self, layout, type):
         sprite_group = pygame.sprite.Group()
 
@@ -156,6 +160,11 @@ class Level:
                     elif type == 'enemy':
                         sprite = Crabby((x,y), self.crabby_animations)
                         sprite_group.add(sprite)
+
+                    elif type == 'border':
+                        sprite = Tile((x,y))
+                        sprite_group.add(sprite)
+
         return sprite_group
     
     def create_jump_particles(self):
@@ -167,10 +176,15 @@ class Level:
             landing_particle_sprite = Particle(self.player.sprite.rect.midbottom, self.player.sprite.dust_animations['land'], 'land')
             self.dust_sprites.add(landing_particle_sprite)
 
+    def enemy_border_collision(self):
+        for enemy in self.enemy_sprites.sprites():
+            if pygame.sprite.spritecollide(enemy, self.border_sprites, False):
+                enemy.reverse_direction()
+
     def spawn_clouds(self):
         for cloud in range(5):
             img = choice(self.cloud_imgs)
-            cloud = Cloud((randint(HORIZONTAL_TILES * TILE_SIZE, 2 * HORIZONTAL_TILES * TILE_SIZE), randint(0, VERTICAL_TILES * TILE_SIZE)), img)
+            cloud = Cloud((randint(HORIZONTAL_TILES * TILE_SIZE, 2 * HORIZONTAL_TILES * TILE_SIZE), randint(0, (VERTICAL_TILES - 8) * TILE_SIZE)), img)
             self.cloud_sprites.add(cloud)
 
     def get_player_on_ground(self):
@@ -310,6 +324,11 @@ class Level:
         self.terrain_sprites.update(self.x_map_shift, self.y_map_shift)
         self.terrain_sprites.draw(self.screen)
 
+        # update borders
+        self.border_sprites.update(self.x_map_shift, self.y_map_shift)
+        
+        # enemy-border collisions
+        self.enemy_border_collision()
 
         # collision detection
 
