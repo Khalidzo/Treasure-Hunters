@@ -71,3 +71,16 @@ class Flag(AnimatedTile):
     def __init__(self, position, frames):
         super().__init__(position, frames)
         self.rect = self.image.get_rect(center = (position[0] + TILE_SIZE/2, position[1] - 28))
+
+class Crate(StaticTile):
+    def __init__(self, position, surface):
+        super().__init__(position, surface)
+        self.rect = self.image.get_rect(bottomleft = (position[0], position[1] + TILE_SIZE))
+
+class fg_palm(AnimatedTile):
+    def __init__(self, position, frames, type):
+        super().__init__(position, frames)
+        if type == '0':
+            self.rect = self.image.get_rect(center = (position[0] + 20, position[1]))
+        elif type == '1':
+            self.rect = self.image.get_rect(center = (position[0], position[1] + 14))
