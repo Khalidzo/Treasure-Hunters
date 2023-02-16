@@ -35,7 +35,6 @@ class Player(pygame.sprite.Sprite):
     def import_dust_animations(self):
         self.dust_animations = {'jump':[], 'land':[], 'run':[]}
         for animation in self.dust_animations.keys():
-            print('hi' + animation)
             full_path = 'D:\\My Programs\\Treasure Hunter\\Treasure Hunters\\Captain Clown Nose\\Sprites\\Captain Clown Nose\\Captain Clown Nose with Sword\\dust_particles' + '\\' + animation
             self.dust_animations[animation] = import_images(full_path)
             

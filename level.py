@@ -17,7 +17,7 @@ class Level:
 
         # camera setup
         self.camera_top = 1/5 * SCREEN_HEIGHT
-        self.camera_bottom = 2/3 * SCREEN_HEIGHT
+        self.camera_bottom = 1/2 * SCREEN_HEIGHT
         self.camera_right = 2/3 * SCREEN_WIDTH
         self.camera_left = 1/3 * SCREEN_WIDTH
 
@@ -77,6 +77,11 @@ class Level:
         # borders
         self.border_layout = import_csv(level_data['borders'])
         self.border_sprites = self.create_tile_group(self.border_layout, 'border')
+
+        # player
+        player_layout = import_csv(level_data['player'])
+        self.player = pygame.sprite.GroupSingle()
+        self.spawn_player(player_layout)
 
     def create_tile_group(self, layout, type):
         sprite_group = pygame.sprite.Group()
@@ -176,6 +181,15 @@ class Level:
             landing_particle_sprite = Particle(self.player.sprite.rect.midbottom, self.player.sprite.dust_animations['land'], 'land')
             self.dust_sprites.add(landing_particle_sprite)
 
+    def spawn_player(self, layout):
+        for row_index, row in enumerate(layout):
+            for column_index, column in enumerate(row):
+                if column != '-1':
+                    x = column_index * TILE_SIZE
+                    y = row_index * TILE_SIZE
+                    player_sprite = Player((x,y), self.screen, self.create_jump_particles)
+                    self.player.add(player_sprite)
+
     def enemy_border_collision(self):
         for enemy in self.enemy_sprites.sprites():
             if pygame.sprite.spritecollide(enemy, self.border_sprites, False):
@@ -224,7 +238,7 @@ class Level:
         self.player.sprite.apply_gravity()
 
          # check collision
-        for sprite in self.tile_sprites.sprites():
+        for sprite in self.terrain_sprites.sprites() + self.crate_sprites.sprites():
             if sprite.rect.colliderect(self.player.sprite.collision_rect):
                 if self.player.sprite.direction.y > 0:
                     # player is on ground/falling
@@ -245,7 +259,7 @@ class Level:
         self.player.sprite.collision_rect.x += self.player.sprite.direction.x * self.player.sprite.player_speed
 
         # check collision
-        for sprite in self.tile_sprites.sprites():
+        for sprite in self.terrain_sprites.sprites() + self.crate_sprites.sprites():
             if sprite.rect.colliderect(self.player.sprite.collision_rect):
                 if self.player.sprite.direction.x < 0:
                     # player moving to the right
@@ -256,25 +270,12 @@ class Level:
                                                       
     def run(self):
         # map
-        #self.scroll_map_x()
-        #self.scroll_map_y()
+        self.scroll_map_x()
+        self.scroll_map_y()
 
         # dust particles
         #self.dust_sprites.update(self.x_map_shift, self.y_map_shift)
         #self.dust_sprites.draw(self.screen)
-
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_d]:
-            self.x_map_shift = -8
-        elif keys[pygame.K_a]:
-            self.x_map_shift = 8
-        elif keys[pygame.K_s]:
-            self.y_map_shift = -4
-        elif keys[pygame.K_w]:
-            self.y_map_shift = 4
-        else:
-            self.x_map_shift = 0
-            self.y_map_shift = 0
 
         # render sky
         self.sky_sprites.update(self.y_map_shift)
@@ -332,11 +333,11 @@ class Level:
 
         # collision detection
 
-        #self.horizontal_collisions()
-        #self.get_player_on_ground()
-        #self.vertical_collisions()
-        #self.create_landing_particles()
+        self.horizontal_collisions()
+        self.get_player_on_ground()
+        self.vertical_collisions()
+        self.create_landing_particles()
 
         # render player
-        #self.player.update()
-        #self.player.draw(self.screen)
+        self.player.update()
+        self.player.draw(self.screen)

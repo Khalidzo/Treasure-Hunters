@@ -10,7 +10,8 @@ level_0 = {
     'flag': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_flag.csv',
     'crate': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_crates.csv',
     'enemies': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_enemies.csv',
-    'borders': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_borders.csv'
+    'borders': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_borders.csv',
+    'player': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_player.csv'
 }
 
 HORIZONTAL_TILES = 90
