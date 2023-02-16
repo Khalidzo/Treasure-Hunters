@@ -1,9 +1,10 @@
 import pygame
-from settings import SCREEN_HEIGHT,SCREEN_WIDTH, TILE_SIZE, HORIZONTAL_TILES
-from tile import Tile, StaticTile, AnimatedTile, Coin, Palm, WaterReflection, Sky, Flag, Crate, fg_palm
+from settings import SCREEN_HEIGHT,SCREEN_WIDTH, TILE_SIZE, HORIZONTAL_TILES, VERTICAL_TILES
+from tile import Tile, StaticTile, AnimatedTile, Coin, Palm, WaterReflection, Sky, Flag, Crate, fg_palm, Cloud
 from player import Player
 from particles import Particle
 from utils import import_csv, import_sliced_graphics, import_images
+from random import randint, choice
 
 class Level:
     def __init__(self, screen, level_data):
@@ -65,6 +66,7 @@ class Level:
         
         # clouds
         self.cloud_sprites = pygame.sprite.Group()
+        self.cloud_imgs = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\clouds')
 
     def create_tile_group(self, layout, type):
         sprite_group = pygame.sprite.Group()
@@ -157,8 +159,11 @@ class Level:
             landing_particle_sprite = Particle(self.player.sprite.rect.midbottom, self.player.sprite.dust_animations['land'], 'land')
             self.dust_sprites.add(landing_particle_sprite)
 
-    def create_cloud(self):
-        self.current_time = pygame.time.get_ticks()
+    def spawn_clouds(self):
+        for cloud in range(5):
+            img = choice(self.cloud_imgs)
+            cloud = Cloud((randint(HORIZONTAL_TILES * TILE_SIZE, 2 * HORIZONTAL_TILES * TILE_SIZE), randint(0, VERTICAL_TILES * TILE_SIZE)), img)
+            self.cloud_sprites.add(cloud)
 
     def get_player_on_ground(self):
         if self.player.sprite.on_ground:
@@ -253,6 +258,10 @@ class Level:
         self.sky_sprites.update(self.y_map_shift)
         self.sky_sprites.draw(self.screen)
 
+        # render clouds
+        self.cloud_sprites.update(self.x_map_shift, self.y_map_shift)
+        self.cloud_sprites.draw(self.screen)
+
         # render bg water + horizon
         self.bg_water_sprites.update(self.x_map_shift, self.y_map_shift)
         self.bg_water_sprites.draw(self.screen)
@@ -261,14 +270,9 @@ class Level:
         self.grass_sprites.update(self.x_map_shift, self.y_map_shift)
         self.grass_sprites.draw(self.screen)
 
-
         # render flag
         self.flag_sprite.update(self.x_map_shift, self.y_map_shift)
         self.flag_sprite.draw(self.screen)
-
-        # render crates 
-        self.crate_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.crate_sprites.draw(self.screen)
         
         # render water reflection
         self.water_reflect_sprites.update(self.x_map_shift, self.y_map_shift)
@@ -277,6 +281,10 @@ class Level:
         # render background balms
         self.bg_balm_sprites.update(self.x_map_shift, self.y_map_shift)
         self.bg_balm_sprites.draw(self.screen)
+
+        # render crates 
+        self.crate_sprites.update(self.x_map_shift, self.y_map_shift)
+        self.crate_sprites.draw(self.screen)
 
         # render fg balms
         self.fg_balm_sprites.update(self.x_map_shift, self.y_map_shift)
@@ -289,7 +297,6 @@ class Level:
         # render coins
         self.coin_sprites.update(self.x_map_shift, self.y_map_shift)
         self.coin_sprites.draw(self.screen)
-  
 
         # collision detection
 

@@ -84,3 +84,18 @@ class fg_palm(AnimatedTile):
             self.rect = self.image.get_rect(center = (position[0] + 20, position[1]))
         elif type == '1':
             self.rect = self.image.get_rect(center = (position[0], position[1] + 14))
+
+
+class Cloud(pygame.sprite.Sprite):
+    def __init__(self, position, image):
+        super().__init__()
+        self.image = image
+        self.rect = self.image.get_rect(topleft = position)
+    
+    def update(self, x_map_shift, y_map_shift):
+        self.rect.y += y_map_shift
+        self.rect.x -= 1 - x_map_shift
+
+        if self.rect.x < -HORIZONTAL_TILES * TILE_SIZE:
+            self.kill()
+        
