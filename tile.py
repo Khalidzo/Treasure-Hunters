@@ -8,11 +8,6 @@ class Tile(pygame.sprite.Sprite):
         self.image = pygame.Surface((TILE_SIZE, TILE_SIZE))
         self.image.fill('grey')
         self.rect = self.image.get_rect(topleft = position)
-        self.position = position
-
-    """ def update(self, x_map_shift, y_map_shift):
-        self.rect.x = self.position[0] + x_map_shift
-        self.rect.y = self.position[1] + y_map_shift """
 
 class StaticTile(Tile):
     def __init__(self, position, surface):
