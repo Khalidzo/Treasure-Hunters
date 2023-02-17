@@ -7,7 +7,9 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         # basic setup
         self.screen = screen
-
+        self.jump_power = -15
+        self.position_x = position[0]
+        self.position_y = position[1]
         # player animation
         self.import_animations()
         self.frame_index = 0
@@ -49,7 +51,7 @@ class Player(pygame.sprite.Sprite):
     
     def input(self):
         keys = pygame.key.get_pressed()
-
+        timer = pygame.time.get_ticks()
         # check keyboard input
         if keys[pygame.K_d]:
             self.direction.x = 1
@@ -64,7 +66,7 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = 0
         
     def jump(self):
-        self.direction.y = -15
+        self.direction.y = self.jump_power
         self.on_ground = False 
 
     def apply_gravity(self):
@@ -87,7 +89,6 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image = self.image
             self.rect.bottomleft = self.collision_rect.bottomleft
-        
         # set bottom of the rect with the bottom of img
         if self.on_ground:
             self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
@@ -108,15 +109,22 @@ class Player(pygame.sprite.Sprite):
     def update_status(self):
         if self.direction.y < 0:
             self.state = 'jump'
+            #print('player is jumping')
         elif self.direction.y > self.gravity:
             self.state = 'fall'
+            #print('player is falling')
         elif self.direction.x != 0 and self.on_ground:
             self.state = 'run'
+            #print('player is running')
         else:
             self.state = 'idle'
+            #print('player is idle')
+        #print(str(self.direction.x) + ' ' + str(self.direction.y))
 
     def update(self):
-        self.dust_particles_animate()
+        #self.dust_particles_animate()
         self.update_status()
         self.animate()
         self.input()
+        #self.collision_rect.x += -1
+        #self.collision_rect.y = self.position[1] + y_shift

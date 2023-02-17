@@ -17,5 +17,12 @@ level_0 = {
 HORIZONTAL_TILES = 90
 VERTICAL_TILES = 30
 TILE_SIZE = 64
-SCREEN_WIDTH = 1200
+SCREEN_WIDTH = 1200 
 SCREEN_HEIGHT = 720
+
+CAMERA_BORDERS = {
+    'left': 200,
+    'right': 200,
+    'top': 200,
+    'bottom': 250
+}
