@@ -21,8 +21,8 @@ SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 720
 
 CAMERA_BORDERS = {
-    'left': 200,
-    'right': 200,
+    'left': 300,
+    'right': 300,
     'top': 200,
     'bottom': 250
 }

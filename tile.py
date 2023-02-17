@@ -1,5 +1,5 @@
 import pygame
-from random import randint
+from random import randint, choice
 from settings import *
 
 class Tile(pygame.sprite.Sprite):
@@ -29,10 +29,8 @@ class AnimatedTile(Tile):
         else:
             self.image = self.frames[int(self.frame_index)]
         
-    def update(self, x_map_shift, y_map_shift):
+    def update(self):
         self.animate()
-        self.rect.x += x_map_shift
-        self.rect.y += y_map_shift
 
 class Coin(AnimatedTile):
     def __init__(self, position, frames):
@@ -60,8 +58,8 @@ class Sky(pygame.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect(topleft = position)
     
-    def update(self, y_map_shift):
-        self.rect.y += y_map_shift
+    """ def update(self, y_map_shift):
+        self.rect.y += y_map_shift """
 
 class Flag(AnimatedTile):
     def __init__(self, position, frames):
@@ -86,16 +84,19 @@ class Cloud(pygame.sprite.Sprite):
         super().__init__()
         self.image = image
         self.rect = self.image.get_rect(bottomleft = position)
-    
-    def update(self, x_map_shift, y_map_shift):
-        self.rect.y += y_map_shift
-        self.rect.x -= 1 - x_map_shift
+        self.speed_index = 0
+        self.speed = choice([0.5, 1])
 
+    def update(self):
+        self.speed_index += self.speed
+        if self.speed_index > 1:
+            self.speed_index = 0
+        self.rect.x -= int(self.speed_index)
         if self.rect.x < -HORIZONTAL_TILES * TILE_SIZE:
             self.kill()
 
 class bg_water(StaticTile):
     def __init__(self, position, surface):
         super().__init__(position, surface)
-        self.rect = self.image.get_rect(topleft = (position[0], position[1]))
+        self.rect = self.image.get_rect(topleft = (position[0], position[1] + 20))
         

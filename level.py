@@ -30,7 +30,7 @@ class Level:
         terrain_layout = import_csv(level_data['terrain'])
         self.terrain_sprites = self.create_tile_group(terrain_layout, 'terrain')
 
-        """ # coin sprites
+        # coin sprites
         coin_layout = import_csv(level_data['coins'])
         self.coin_sprites = self.create_tile_group(coin_layout, 'coin')
 
@@ -38,7 +38,7 @@ class Level:
         bg_balm_layout = import_csv(level_data['bg_palms'])
         self.bg_balm_sprites = self.create_tile_group(bg_balm_layout, 'bg_balm')
 
-        # background balm sprites
+        # fg balm sprites
         fg_balm_layout = import_csv(level_data['fg_balms'])
         self.fg_balm_sprites = self.create_tile_group(fg_balm_layout, 'fg_balm')
 
@@ -67,7 +67,7 @@ class Level:
         self.sky_sprites = self.create_tile_group(sky_layout, 'sky')
         
         # clouds
-        self.cloud_sprites = pygame.sprite.Group()
+        self.cloud_sprites = CameraGroup()
         self.cloud_imgs = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\clouds')
 
         # enemies
@@ -77,7 +77,7 @@ class Level:
 
         # borders
         self.border_layout = import_csv(level_data['borders'])
-        self.border_sprites = self.create_tile_group(self.border_layout, 'border') """
+        self.border_sprites = self.create_tile_group(self.border_layout, 'border')
 
         # player
         player_layout = import_csv(level_data['player'])
@@ -199,53 +199,21 @@ class Level:
                 enemy.reverse_direction()
 
     def spawn_clouds(self):
-        for cloud in range(5):
-            img = choice(self.cloud_imgs)
-            cloud = Cloud((randint(HORIZONTAL_TILES * TILE_SIZE, 2 * HORIZONTAL_TILES * TILE_SIZE), randint(0, (VERTICAL_TILES - 8) * TILE_SIZE)), img)
-            self.cloud_sprites.add(cloud)
+        img = choice(self.cloud_imgs)
+        cloud = Cloud((randint(HORIZONTAL_TILES * TILE_SIZE, 2 * HORIZONTAL_TILES * TILE_SIZE), randint(0, (VERTICAL_TILES - 8) * TILE_SIZE)), img)
+        self.cloud_sprites.add(cloud)
 
     def get_player_on_ground(self):
         if self.player.on_ground:
             self.player_on_ground = True
         else:
             self.player_on_ground = False
-
-    def scroll(self):
-        self.x_map_shift += -1
         
-    def scroll_map_x(self):
-        # player moving to the right of the map
-        if self.player.sprite.rect.centerx >= self.camera_right and self.player.sprite.direction.x > 0:
-            self.x_map_shift = -self.player.sprite.player_speed
-            self.player.sprite.direction.x = 0
-        # player moving to the left of the map
-        elif self.player.sprite.rect.centerx <= self.camera_left and self.player.sprite.direction.x < 0:
-            self.x_map_shift = self.player.sprite.player_speed
-            self.player.sprite.direction.x = 0
-        else:
-            self.x_map_shift = 0
-    
-    def scroll_map_y(self):
-        # player moving upwards
-        if self.player.sprite.rect.centery <= self.camera_top and self.player.sprite.direction.y < 0:
-            self.player.sprite.collision_rect.y += 4
-            self.y_map_shift = self.player.sprite.player_speed
-            self.camera_top -= self.player.sprite.player_speed
-            self.camera_bottom -= self.player.sprite.player_speed
-            
-        # player moving downwards
-        elif (self.player.sprite.rect.centery >= self.camera_bottom and self.player.sprite.direction.y > 0.8 and self.player.sprite.state == 'fall') or (self.player.sprite.rect.centery >= 5/3 * self.camera_y_center):
-            self.y_map_shift = -self.player.sprite.player_speed
-            self.camera_top += self.player.sprite.player_speed
-            self.camera_bottom += self.player.sprite.player_speed
-        else:
-            self.y_map_shift = 0
-
     def vertical_collisions(self):
         self.player.apply_gravity()
 
          # check collision
-        for sprite in self.terrain_sprites.sprites():
+        for sprite in self.terrain_sprites.sprites() + self.crate_sprites.sprites():
             if sprite.rect.colliderect(self.player.collision_rect):
                 if self.player.direction.y > 0:
                     # player is on ground
@@ -265,7 +233,7 @@ class Level:
         self.player.collision_rect.x += self.player.direction.x * self.player.player_speed
 
         # check collision
-        for sprite in self.terrain_sprites.sprites():
+        for sprite in self.terrain_sprites.sprites() + self.crate_sprites.sprites():
             if sprite.rect.colliderect(self.player.collision_rect):
                 if self.player.direction.x < 0:
                     # player moving to the right
@@ -276,54 +244,50 @@ class Level:
                     self.player.collision_rect.right = sprite.rect.left
                                                       
     def run(self):
-        # map
-        #self.scroll_map_x()
-        #self.scroll_map_y()
-        #self.scroll()
 
-        """ # render sky
-        self.sky_sprites.update(self.y_map_shift)
-        self.sky_sprites.draw(self.screen)
+        # render sky
+        self.sky_sprites.update()
+        self.sky_sprites.custom_draw(self.player)
 
         # render clouds
-        self.cloud_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.cloud_sprites.draw(self.screen)
+        self.cloud_sprites.update()
+        self.cloud_sprites.custom_draw(self.player)
 
-        # render bg water + horizon
-        self.bg_water_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.bg_water_sprites.draw(self.screen)
+        # render bg water
+        self.bg_water_sprites.update()
+        self.bg_water_sprites.custom_draw(self.player)
         
         # render grass
-        self.grass_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.grass_sprites.draw(self.screen)
+        self.grass_sprites.update()
+        self.grass_sprites.custom_draw(self.player)
 
         # render flag
-        self.flag_sprite.update(self.x_map_shift, self.y_map_shift)
-        self.flag_sprite.draw(self.screen)
+        self.flag_sprite.update()
+        self.flag_sprite.custom_draw(self.player)
         
         # render water reflection
-        self.water_reflect_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.water_reflect_sprites.draw(self.screen)
+        self.water_reflect_sprites.update()
+        self.water_reflect_sprites.custom_draw(self.player)
 
         # render background balms
-        self.bg_balm_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.bg_balm_sprites.draw(self.screen)
+        self.bg_balm_sprites.update()
+        self.bg_balm_sprites.custom_draw(self.player)
 
         # render crates 
-        self.crate_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.crate_sprites.draw(self.screen)
+        self.crate_sprites.update()
+        self.crate_sprites.custom_draw(self.player)
         
         # render coins
-        self.coin_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.coin_sprites.draw(self.screen)
+        self.coin_sprites.update()
+        self.coin_sprites.custom_draw(self.player)
 
         # render enemies
-        self.enemy_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.enemy_sprites.draw(self.screen)
+        self.enemy_sprites.update()
+        self.enemy_sprites.custom_draw(self.player)
 
         # render fg balms
-        self.fg_balm_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.fg_balm_sprites.draw(self.screen) """
+        self.fg_balm_sprites.update()
+        self.fg_balm_sprites.custom_draw(self.player)
         
         # render terrain
         self.terrain_sprites.update()
@@ -338,16 +302,16 @@ class Level:
         # dust particles
         """ self.dust_sprites.update(self.x_map_shift, self.y_map_shift)
         self.dust_sprites.draw(self.screen)
- """
+  """
         # render player
         self.player_sprite.update()
         self.player_sprite.custom_draw(self.player)
 
-        """ # update borders
-        self.border_sprites.update(self.x_map_shift, self.y_map_shift)
+        # update borders
+        self.border_sprites.update(self.player)
         
         # enemy-border collisions
-        self.enemy_border_collision() """
+        self.enemy_border_collision()
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):

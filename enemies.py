@@ -32,9 +32,7 @@ class Crabby(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
 
-    def update(self, x_map_shift, y_map_shift):
+    def update(self):
         self.animate()
         self.move()
         self.reverse_image()
-        self.rect.x += x_map_shift
-        self.rect.y += y_map_shift

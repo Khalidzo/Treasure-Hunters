@@ -7,8 +7,8 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 level = Level(screen, level_0)
-""" cloud_event = pygame.USEREVENT + 1
-pygame.time.set_timer(cloud_event, 5000) """
+cloud_event = pygame.USEREVENT + 1
+pygame.time.set_timer(cloud_event, 1000)
 
 if __name__ == '__main__':
     while True:
@@ -16,8 +16,8 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            """ elif event.type == cloud_event:
-                level.spawn_clouds() """
+            elif event.type == cloud_event:
+                level.spawn_clouds()
 
         screen.fill('black')
         level.run()
