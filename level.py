@@ -12,18 +12,9 @@ class Level:
         # basic setup
         self.screen = screen
         self.current_time = pygame.time.get_ticks()
-        self.x_map_shift = 0
-        self.y_map_shift = 0
-        self.camera_y_center = SCREEN_HEIGHT / 2
-
-        # camera setup
-        self.camera_top = 1/5 * SCREEN_HEIGHT
-        self.camera_bottom = 1/2 * SCREEN_HEIGHT
-        self.camera_right = 2/3 * SCREEN_WIDTH
-        self.camera_left = 1/3 * SCREEN_WIDTH
 
         # dust particles
-        self.dust_sprites = pygame.sprite.Group()
+        self.dust_sprites = CameraGroup()
         self.player_on_ground = False
         
         # terrain sprites
@@ -83,8 +74,6 @@ class Level:
         player_layout = import_csv(level_data['player'])
         self.player_sprite = CameraGroup()
         self.spawn_player(player_layout)
-
-        self.scroll_values = [0,0]
 
     def create_tile_group(self, layout, type):
         sprite_group = CameraGroup()
@@ -297,12 +286,12 @@ class Level:
         self.horizontal_collisions()
         self.get_player_on_ground()
         self.vertical_collisions()
-        #self.create_landing_particles()
+        self.create_landing_particles()
 
         # dust particles
-        """ self.dust_sprites.update(self.x_map_shift, self.y_map_shift)
-        self.dust_sprites.draw(self.screen)
-  """
+        self.dust_sprites.update()
+        self.dust_sprites.custom_draw(self.player)
+ 
         # render player
         self.player_sprite.update()
         self.player_sprite.custom_draw(self.player)
