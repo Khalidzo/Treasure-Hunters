@@ -63,6 +63,7 @@ class Level:
 
         # enemies
         self.crabby_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\The Crusty Crew\Sprites\Crabby\Run (scaled)')
+        self.crabby_death_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\The Crusty Crew\Sprites\Crabby\09-Dead Hit\Dead Scaled')
         self.enemy_layout = import_csv(level_data['enemies'])
         self.enemy_sprites = self.create_tile_group(self.enemy_layout, 'enemy')
 
@@ -155,7 +156,7 @@ class Level:
                         sprite_group.add(sprite)
                     
                     elif type == 'enemy':
-                        sprite = Crabby((x,y), self.crabby_animations)
+                        sprite = Crabby((x,y), self.crabby_animations, self.crabby_death_animations)
                         sprite_group.add(sprite)
 
                     elif type == 'border':
@@ -191,7 +192,7 @@ class Level:
         for enemy in self.enemy_sprites.sprites():
             if enemy.rect.colliderect(self.player.collision_rect) and self.player.direction.y > self.player.gravity:
                 self.player.direction.y = self.player.jump_power
-                enemy.kill()
+                enemy.dead = True
 
     def spawn_clouds(self):
         img = choice(self.cloud_imgs)
