@@ -38,8 +38,7 @@ class Player(pygame.sprite.Sprite):
         self.dust_animations = {'jump':[], 'land':[], 'run':[]}
         for animation in self.dust_animations.keys():
             full_path = 'D:\\My Programs\\Treasure Hunter\\Treasure Hunters\\Captain Clown Nose\\Sprites\\Captain Clown Nose\\Captain Clown Nose with Sword\\dust_particles' + '\\' + animation
-            self.dust_animations[animation] = import_images(full_path)
-            
+            self.dust_animations[animation] = import_images(full_path)           
 
     def import_animations(self):
         self.animations = {'idle':[], 'jump':[], 'run':[], 'fall':[]}
@@ -51,7 +50,7 @@ class Player(pygame.sprite.Sprite):
     
     def input(self):
         keys = pygame.key.get_pressed()
-        timer = pygame.time.get_ticks()
+
         # check keyboard input
         if keys[pygame.K_d]:
             self.direction.x = 1
@@ -93,7 +92,8 @@ class Player(pygame.sprite.Sprite):
         if self.on_ground:
             self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
 
-    def dust_particles_animate(self):
+    def dust_particles_animate(self, offset):
+
         if self.state == 'run' and self.on_ground:
             self.dust_frame_index += self.dust_animate_speed
             if self.dust_frame_index >= len(self.dust_animations):
@@ -101,30 +101,26 @@ class Player(pygame.sprite.Sprite):
             dust_particle = self.dust_animations['run'][int(self.dust_frame_index)]
 
             if self.facing_right:
-                self.screen.blit(dust_particle, (self.rect.bottomleft[0] - 15, self.rect.bottomleft[1] - 10))
+                self.screen.blit(dust_particle, (self.collision_rect.bottomleft[0] - 15, self.collision_rect.bottomleft[1] - 10) - offset)
+                print('dust right')
             else:
                 dust_particle = pygame.transform.flip(dust_particle, True, False)
-                self.screen.blit(dust_particle, (self.rect.bottomright[0] + 5, self.rect.bottomright[1] - 10))
+                self.screen.blit(dust_particle, (self.collision_rect.bottomright[0] + 5, self.collision_rect.bottomright[1] - 10) - offset)
 
     def update_status(self):
         if self.direction.y < 0:
             self.state = 'jump'
-            #print('player is jumping')
+
         elif self.direction.y > self.gravity:
             self.state = 'fall'
-            #print('player is falling')
+
         elif self.direction.x != 0 and self.on_ground:
             self.state = 'run'
-            #print('player is running')
+
         else:
             self.state = 'idle'
-            #print('player is idle')
-        #print(str(self.direction.x) + ' ' + str(self.direction.y))
 
     def update(self):
-        #self.dust_particles_animate()
         self.update_status()
         self.animate()
         self.input()
-        #self.collision_rect.x += -1
-        #self.collision_rect.y = self.position[1] + y_shift

@@ -292,10 +292,10 @@ class Level:
         self.dust_sprites.update()
         self.dust_sprites.custom_draw(self.player)
  
-        # render player
+        # render player and his particles
         self.player_sprite.update()
         self.player_sprite.custom_draw(self.player)
-
+        self.player.dust_particles_animate(self.player_sprite.offset)
         # update borders
         self.border_sprites.update(self.player)
         
@@ -312,8 +312,8 @@ class CameraGroup(pygame.sprite.Group):
         camera_top = CAMERA_BORDERS['top']
         camera_width = SCREEN_WIDTH - (CAMERA_BORDERS['left'] + CAMERA_BORDERS['right'])
         camera_height = SCREEN_HEIGHT - (CAMERA_BORDERS['top'] + CAMERA_BORDERS['bottom'])
-
         self.camera_rect = pygame.Rect(camera_left, camera_top, camera_width, camera_height)
+
     def custom_draw(self, player):
         # update camera position
         if player.collision_rect.left < self.camera_rect.left:
