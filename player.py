@@ -102,7 +102,6 @@ class Player(pygame.sprite.Sprite):
 
             if self.facing_right:
                 self.screen.blit(dust_particle, (self.collision_rect.bottomleft[0] - 15, self.collision_rect.bottomleft[1] - 10) - offset)
-                print('dust right')
             else:
                 dust_particle = pygame.transform.flip(dust_particle, True, False)
                 self.screen.blit(dust_particle, (self.collision_rect.bottomright[0] + 5, self.collision_rect.bottomright[1] - 10) - offset)

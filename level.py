@@ -187,6 +187,12 @@ class Level:
             if pygame.sprite.spritecollide(enemy, self.border_sprites, False):
                 enemy.reverse_direction()
 
+    def enemy_player_collision(self):
+        for enemy in self.enemy_sprites.sprites():
+            if enemy.rect.colliderect(self.player.collision_rect) and self.player.direction.y > self.player.gravity:
+                self.player.direction.y = self.player.jump_power
+                enemy.kill()
+
     def spawn_clouds(self):
         img = choice(self.cloud_imgs)
         cloud = Cloud((randint(HORIZONTAL_TILES * TILE_SIZE, 2 * HORIZONTAL_TILES * TILE_SIZE), randint(0, (VERTICAL_TILES - 8) * TILE_SIZE)), img)
@@ -299,8 +305,9 @@ class Level:
         # update borders
         self.border_sprites.update(self.player)
         
-        # enemy-border collisions
+        # enemy collisions
         self.enemy_border_collision()
+        self.enemy_player_collision()
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
