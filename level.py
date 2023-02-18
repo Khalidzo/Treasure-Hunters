@@ -190,7 +190,7 @@ class Level:
 
     def enemy_player_collision(self):
         for enemy in self.enemy_sprites.sprites():
-            if enemy.rect.colliderect(self.player.collision_rect) and self.player.direction.y > self.player.gravity:
+            if enemy.rect.colliderect(self.player.collision_rect) and self.player.direction.y > self.player.gravity and not enemy.dead:
                 self.player.direction.y = self.player.jump_power
                 enemy.dead = True
 
