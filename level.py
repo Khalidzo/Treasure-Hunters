@@ -11,7 +11,6 @@ class Level:
     def __init__(self, screen, level_data):
         # basic setup
         self.screen = screen
-        self.current_time = pygame.time.get_ticks()
 
         # dust particles
         self.dust_sprites = CameraGroup()
@@ -88,6 +87,9 @@ class Level:
         self.health_bar_fill_full_width = 153
         self.health_bar_fill_height = 4
 
+        # coin tracking
+        self.coint_amount = 0
+
     def create_tile_group(self, layout, type):
         sprite_group = CameraGroup()
 
@@ -106,10 +108,12 @@ class Level:
                     elif type == 'coin':
                         if column == '0':
                             coin_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Pirate Treasure\Sprites\coins\gold')
+                            value = 1
                         else:
                             coin_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Pirate Treasure\Sprites\coins\silver')
+                            value = 3
 
-                        sprite = Coin((x,y), coin_animations)
+                        sprite = Coin((x,y), coin_animations, value)
                         sprite_group.add(sprite)
                     
                     elif type == 'bg_balm':
@@ -253,6 +257,12 @@ class Level:
         self.health_bar_fill = pygame.Rect(self.health_bar_fill_x, self.health_bar_fill_y, self.health_bar_fill_width, self.health_bar_fill_height)
         pygame.draw.rect(self.screen, (224, 76, 76), self.health_bar_fill)
 
+    def hit_coin(self):
+        for coin in self.coin_sprites.sprites():
+            if coin.rect.colliderect(self.player.collision_rect):
+                self.coint_amount += coin.value
+                coin.kill()
+
     def horizontal_collisions(self):
         self.player.collision_rect.x += self.player.direction.x * self.player.player_speed
 
@@ -340,6 +350,7 @@ class Level:
 
         # display health bar
         self.show_health_bar()
+        self.hit_coin()
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
