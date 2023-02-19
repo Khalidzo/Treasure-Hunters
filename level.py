@@ -12,8 +12,6 @@ class Level:
         # basic setup
         self.screen = screen
         self.current_time = pygame.time.get_ticks()
-        self.maximum_health = 100
-        self.current_health = 100
 
         # dust particles
         self.dust_sprites = CameraGroup()
@@ -217,7 +215,7 @@ class Level:
 
     def apply_damage(self):
         if not self.player.invincible:
-            self.current_health -= 10
+            self.player.current_health -= 15
             self.player.invincible = True
             self.player.hurt_time = pygame.time.get_ticks()
 
@@ -248,7 +246,7 @@ class Level:
             self.player.on_ground = False
 
     def show_health_bar(self):
-        self.health_bar_fill_width = (self.current_health/self.maximum_health) * self.health_bar_fill_full_width
+        self.health_bar_fill_width = (self.player.current_health/self.player.maximum_health) * self.health_bar_fill_full_width
         self.screen.blit(self.health_bar_1, (self.health_bar_x, self.health_bar_y))
         self.screen.blit(self.health_bar_2, (self.health_bar_x + TILE_SIZE, self.health_bar_y))
         self.screen.blit(self.health_bar_3, (self.health_bar_x + 2 * TILE_SIZE, self.health_bar_y))
