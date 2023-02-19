@@ -4,13 +4,27 @@ from level import Level
 from ui import Menu
 
 pygame.init()
+class Game:
+    def __init__(self):
+        self.screen = pygame.display.get_surface()
+        self.level = Level(self.screen, level_0)
+        self.menu = Menu(self.screen)
+        self.cloud_spawn_event = pygame.USEREVENT + 1
+        pygame.time.set_timer(self.cloud_spawn_event, 3000)
+    
+    def run(self):
+        if not self.menu.play:
+            self.menu.run()
+        else:
+            for event in pygame.event.get():
+                if event.type == self.cloud_spawn_event:
+                    self.level.spawn_clouds()
+            self.level.run()
+
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
-#level = Level(screen, level_0)
 
-cloud_spawn_event = pygame.USEREVENT + 1
-pygame.time.set_timer(cloud_spawn_event, 3000)
-menu = Menu(screen)
+game = Game()
 
 if __name__ == '__main__':
     while True:
@@ -18,11 +32,9 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            """ elif event.type == cloud_spawn_event:
-                level.spawn_clouds() """
-
+                
         screen.fill('black')
-        menu.run()
-        #level.run()
+        game.run()
         pygame.display.update()
         clock.tick(60)  
+

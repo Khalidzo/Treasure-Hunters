@@ -28,6 +28,7 @@ class Menu:
         self.button = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Green Button\1.png').convert()
         self.button = pygame.transform.scale(self.button, (150,150))
         self.button_rect = pygame.Rect(((SCREEN_HEIGHT - 150)/2 + 250, (SCREEN_HEIGHT - 150)/2 + 100), (150,150))
+        self.pressed = False
 
         # font
         self.font = pygame.font.Font(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\ARCADEPI.ttf', 30)
@@ -67,10 +68,14 @@ class Menu:
             if pygame.mouse.get_pressed()[0]:
                 self.button = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Green Button\1 pressed.png').convert()
                 self.button = pygame.transform.scale(self.button, (150,150))
+                self.pressed = True
+                
             else:
-                self.button = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Green Button\1.png').convert()
-                self.button = pygame.transform.scale(self.button, (150,150))
-                self.play = True
+                if self.pressed:
+                    self.button = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Green Button\1.png').convert()
+                    self.button = pygame.transform.scale(self.button, (150,150))
+                    self.play = True
+                
 
     def display_background(self):
         for i in range(0, SCREEN_HEIGHT // TILE_SIZE + 1):
