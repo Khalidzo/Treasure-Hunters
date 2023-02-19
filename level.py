@@ -76,6 +76,13 @@ class Level:
         self.player_sprite = CameraGroup()
         self.spawn_player(player_layout)
 
+        # health bar
+        self.health_bar_x = 50
+        self.health_bar_y = 50
+        self.health_bar_1 = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\1.png').convert_alpha()
+        self.health_bar_2 = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\2.png').convert_alpha()
+        self.health_bar_3 = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\3.png').convert_alpha()
+
     def create_tile_group(self, layout, type):
         sprite_group = CameraGroup()
 
@@ -309,6 +316,11 @@ class Level:
         # enemy collisions
         self.enemy_border_collision()
         self.enemy_player_collision()
+
+        # show health bar
+        self.screen.blit(self.health_bar_1, (self.health_bar_x, self.health_bar_y))
+        self.screen.blit(self.health_bar_2, (self.health_bar_x + TILE_SIZE, self.health_bar_y))
+        self.screen.blit(self.health_bar_3, (self.health_bar_x + 2 * TILE_SIZE, self.health_bar_y))
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
