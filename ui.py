@@ -5,11 +5,12 @@ from random import randint, choice
 from utils import import_images
 
 class Menu:
-    def __init__(self, screen):
+    def __init__(self, screen, level_play_music):
         # basic setup
         self.screen = screen
+        self.level_play_music = level_play_music
         self.play = False
-
+        
         # background
         self.sky_top = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\sky\sky_top.png').convert()
         self.sky_middle = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\sky\sky_middle.png').convert()
@@ -38,6 +39,11 @@ class Menu:
         # clouds
         self.cloud_sprites = pygame.sprite.Group()
         self.cloud_imgs = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\clouds')
+
+        # background music
+        self.music = pygame.mixer.Sound(r'D:\My Programs\Treasure Hunter\audio\menu_music.wav')
+        self.music.set_volume(0.03)
+        self.music.play(-1)
 
     def display_board(self):
         board_x = (SCREEN_WIDTH - 500)/2
@@ -74,8 +80,9 @@ class Menu:
                 if self.pressed:
                     self.button = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Green Button\1.png').convert()
                     self.button = pygame.transform.scale(self.button, (150,150))
-                    self.play = True
-                
+                    self.play = True    
+                    self.music.stop()
+                    self.level_play_music()   
 
     def display_background(self):
         for i in range(0, SCREEN_HEIGHT // TILE_SIZE + 1):

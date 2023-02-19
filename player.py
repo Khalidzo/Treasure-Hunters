@@ -4,11 +4,12 @@ from particles import Particle
 from math import sin
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, position, screen, create_jump_particles):
+    def __init__(self, position, screen, create_jump_particles, play_jump_sound):
         super().__init__()
 
         # basic setup
         self.screen = screen
+        self.play_jump_sound = play_jump_sound
         self.jump_power = -15
         self.position_x = position[0]
         self.position_y = position[1]
@@ -87,6 +88,7 @@ class Player(pygame.sprite.Sprite):
         
     def jump(self):
         self.direction.y = self.jump_power
+        self.play_jump_sound()
         self.on_ground = False 
 
     def apply_gravity(self):

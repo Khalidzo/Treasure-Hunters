@@ -11,7 +11,6 @@ class Level:
     def __init__(self, screen, level_data):
         # basic setup
         self.screen = screen
-
         # dust particles
         self.dust_sprites = CameraGroup()
         self.player_on_ground = False
@@ -91,6 +90,27 @@ class Level:
         self.coin_icon = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\coin.png').convert_alpha()
         self.coint_amount = 0
         self.font = pygame.font.Font(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\ARCADEPI.ttf', 30)
+
+        # music
+        self.background_music = pygame.mixer.Sound(r'D:\My Programs\Treasure Hunter\audio\level_music.wav')
+        self.background_music.set_volume(0.05)
+
+        # jump effect
+        self.jump_effect = pygame.mixer.Sound(r'D:\My Programs\Treasure Hunter\audio\effects\jump.wav')
+        self.jump_effect.set_volume(0.05)
+
+        # coin effect
+        self.coin_effect = pygame.mixer.Sound(r'D:\My Programs\Treasure Hunter\audio\effects\coin.wav')
+        self.coin_effect.set_volume(0.05)
+
+        # stomp effect
+        self.stomp_effect = pygame.mixer.Sound(r'D:\My Programs\Treasure Hunter\audio\effects\stomp.wav')
+        self.stomp_effect.set_volume(0.05)
+
+        # hit effect
+        self.hit_effect = pygame.mixer.Sound(r'D:\My Programs\Treasure Hunter\audio\effects\hit.wav')
+        self.hit_effect.set_volume(0.05)
+
 
     def create_tile_group(self, layout, type):
         sprite_group = CameraGroup()
@@ -198,7 +218,7 @@ class Level:
                 if column != '-1':
                     x = column_index * TILE_SIZE
                     y = row_index * TILE_SIZE
-                    self.player = Player((x,y), self.screen, self.create_jump_particles)
+                    self.player = Player((x,y), self.screen, self.create_jump_particles, self.play_jump_sound)
                     self.player_sprite.add(self.player)
 
     def enemy_border_collision(self):
@@ -210,9 +230,22 @@ class Level:
         for enemy in self.enemy_sprites.sprites():
             if enemy.rect.colliderect(self.player.collision_rect) and self.player.direction.y > self.player.gravity and not enemy.dead:
                 self.player.direction.y = self.player.jump_power
+                self.play_stomp()
                 enemy.dead = True
-            elif enemy.rect.colliderect(self.player.collision_rect):
+            elif enemy.rect.colliderect(self.player.collision_rect) and not enemy.dead:
                 self.apply_damage()
+
+    def play_music(self):
+        self.background_music.play(loops=-1)
+
+    def play_hit(self):
+        self.hit_effect.play()
+
+    def play_stomp(self):
+        self.stomp_effect.play()
+
+    def play_coin_collection(self):
+        self.coin_effect.play()
 
     def spawn_clouds(self):
         img = choice(self.cloud_imgs)
@@ -221,6 +254,7 @@ class Level:
 
     def apply_damage(self):
         if not self.player.invincible:
+            self.play_hit()
             self.player.current_health -= 15
             self.player.invincible = True
             self.player.hurt_time = pygame.time.get_ticks()
@@ -268,8 +302,9 @@ class Level:
         for coin in self.coin_sprites.sprites():
             if coin.rect.colliderect(self.player.collision_rect):
                 self.coint_amount += coin.value
+                self.play_coin_collection()
                 coin.kill()
-
+                
     def horizontal_collisions(self):
         self.player.collision_rect.x += self.player.direction.x * self.player.player_speed
 
@@ -283,7 +318,10 @@ class Level:
                 elif self.player.direction.x > 0:
                     # player moving to the left
                     self.player.collision_rect.right = sprite.rect.left
-                                                      
+
+    def play_jump_sound(self):
+        self.jump_effect.play()
+                                                
     def run(self):
 
         # render sky
