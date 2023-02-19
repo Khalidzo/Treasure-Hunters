@@ -87,8 +87,10 @@ class Level:
         self.health_bar_fill_full_width = 153
         self.health_bar_fill_height = 4
 
-        # coin tracking
+        # coin ui
+        self.coin_icon = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\coin.png').convert_alpha()
         self.coint_amount = 0
+        self.font = pygame.font.Font(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\ARCADEPI.ttf', 30)
 
     def create_tile_group(self, layout, type):
         sprite_group = CameraGroup()
@@ -108,10 +110,10 @@ class Level:
                     elif type == 'coin':
                         if column == '0':
                             coin_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Pirate Treasure\Sprites\coins\gold')
-                            value = 1
+                            value = 3
                         else:
                             coin_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Pirate Treasure\Sprites\coins\silver')
-                            value = 3
+                            value = 1
 
                         sprite = Coin((x,y), coin_animations, value)
                         sprite_group.add(sprite)
@@ -256,6 +258,11 @@ class Level:
         self.screen.blit(self.health_bar_3, (self.health_bar_x + 2 * TILE_SIZE, self.health_bar_y))
         self.health_bar_fill = pygame.Rect(self.health_bar_fill_x, self.health_bar_fill_y, self.health_bar_fill_width, self.health_bar_fill_height)
         pygame.draw.rect(self.screen, (224, 76, 76), self.health_bar_fill)
+    
+    def show_coins(self):
+        self.screen.blit(self.coin_icon, (70, 115))
+        coin_amount_surf = self.font.render(str(self.coint_amount),False, 'black')
+        self.screen.blit(coin_amount_surf, (115, 120))
 
     def hit_coin(self):
         for coin in self.coin_sprites.sprites():
@@ -350,7 +357,10 @@ class Level:
 
         # display health bar
         self.show_health_bar()
+
+        # display coins
         self.hit_coin()
+        self.show_coins()
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
