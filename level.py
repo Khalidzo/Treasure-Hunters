@@ -12,6 +12,8 @@ class Level:
         # basic setup
         self.screen = screen
         self.current_time = pygame.time.get_ticks()
+        self.maximum_health = 100
+        self.current_health = 100
 
         # dust particles
         self.dust_sprites = CameraGroup()
@@ -82,8 +84,11 @@ class Level:
         self.health_bar_1 = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\1.png').convert_alpha()
         self.health_bar_2 = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\2.png').convert_alpha()
         self.health_bar_3 = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\3.png').convert_alpha()
-        self.health_bar_fill = pygame.Rect(83, 77, 153, 5)
-        #self.health_bar_fill.fill((224, 76, 76))
+       
+        self.health_bar_fill_x = 83
+        self.health_bar_fill_y = 78
+        self.health_bar_fill_full_width = 153
+        self.health_bar_fill_height = 4
 
     def create_tile_group(self, layout, type):
         sprite_group = CameraGroup()
@@ -202,11 +207,19 @@ class Level:
             if enemy.rect.colliderect(self.player.collision_rect) and self.player.direction.y > self.player.gravity and not enemy.dead:
                 self.player.direction.y = self.player.jump_power
                 enemy.dead = True
+            elif enemy.rect.colliderect(self.player.collision_rect):
+                self.apply_damage()
 
     def spawn_clouds(self):
         img = choice(self.cloud_imgs)
         cloud = Cloud((randint(HORIZONTAL_TILES * TILE_SIZE, 2 * HORIZONTAL_TILES * TILE_SIZE), randint(0, (VERTICAL_TILES - 8) * TILE_SIZE)), img)
         self.cloud_sprites.add(cloud)
+
+    def apply_damage(self):
+        if not self.player.invincible:
+            self.current_health -= 10
+            self.player.invincible = True
+            self.player.hurt_time = pygame.time.get_ticks()
 
     def get_player_on_ground(self):
         if self.player.on_ground:
@@ -235,10 +248,11 @@ class Level:
             self.player.on_ground = False
 
     def show_health_bar(self):
-        
+        self.health_bar_fill_width = (self.current_health/self.maximum_health) * self.health_bar_fill_full_width
         self.screen.blit(self.health_bar_1, (self.health_bar_x, self.health_bar_y))
         self.screen.blit(self.health_bar_2, (self.health_bar_x + TILE_SIZE, self.health_bar_y))
         self.screen.blit(self.health_bar_3, (self.health_bar_x + 2 * TILE_SIZE, self.health_bar_y))
+        self.health_bar_fill = pygame.Rect(self.health_bar_fill_x, self.health_bar_fill_y, self.health_bar_fill_width, self.health_bar_fill_height)
         pygame.draw.rect(self.screen, (224, 76, 76), self.health_bar_fill)
 
     def horizontal_collisions(self):

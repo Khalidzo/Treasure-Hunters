@@ -1,15 +1,18 @@
 import pygame
 from utils import import_images
 from particles import Particle
+from math import sin
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, position, screen, create_jump_particles):
         super().__init__()
+
         # basic setup
         self.screen = screen
         self.jump_power = -15
         self.position_x = position[0]
         self.position_y = position[1]
+
         # player animation
         self.import_animations()
         self.frame_index = 0
@@ -34,6 +37,11 @@ class Player(pygame.sprite.Sprite):
         self.dust_frame_index = 0
         self.dust_animate_speed = self.animate_speed
 
+        # player game status
+        self.invincible = False
+        self.invincibility_duration = 800
+        self.hurt_time = 0
+
     def import_dust_animations(self):
         self.dust_animations = {'jump':[], 'land':[], 'run':[]}
         for animation in self.dust_animations.keys():
@@ -48,6 +56,12 @@ class Player(pygame.sprite.Sprite):
             full_path = img_path + '\\' + animation
             self.animations[animation] = import_images(full_path)
     
+    def invcibility_timer(self):
+        if self.invincible:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.hurt_time >= self.invincibility_duration:
+                self.invincible = False
+
     def input(self):
         keys = pygame.key.get_pressed()
 
@@ -88,6 +102,13 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image = self.image
             self.rect.bottomleft = self.collision_rect.bottomleft
+
+        # update opacity
+        if self.invincible:
+            alpha = self.wave_value()
+            self.image.set_alpha(alpha)
+        else:
+            self.image.set_alpha(255)
         # set bottom of the rect with the bottom of img
         if self.on_ground:
             self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
@@ -106,6 +127,11 @@ class Player(pygame.sprite.Sprite):
                 dust_particle = pygame.transform.flip(dust_particle, True, False)
                 self.screen.blit(dust_particle, (self.collision_rect.bottomright[0] + 5, self.collision_rect.bottomright[1] - 10) - offset)
 
+    def wave_value(self):
+        value = sin(pygame.time.get_ticks())
+        if value >= 0: return 255
+        else: return 0
+
     def update_status(self):
         if self.direction.y < 0:
             self.state = 'jump'
@@ -123,3 +149,4 @@ class Player(pygame.sprite.Sprite):
         self.update_status()
         self.animate()
         self.input()
+        self.invcibility_timer()
