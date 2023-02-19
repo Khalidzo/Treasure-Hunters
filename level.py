@@ -82,6 +82,8 @@ class Level:
         self.health_bar_1 = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\1.png').convert_alpha()
         self.health_bar_2 = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\2.png').convert_alpha()
         self.health_bar_3 = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\3.png').convert_alpha()
+        self.health_bar_fill = pygame.Rect(83, 77, 153, 5)
+        #self.health_bar_fill.fill((224, 76, 76))
 
     def create_tile_group(self, layout, type):
         sprite_group = CameraGroup()
@@ -231,7 +233,14 @@ class Level:
 
         if self.player.on_ground and self.player.direction.y < 0 or self.player.direction.y > 1:
             self.player.on_ground = False
-                   
+
+    def show_health_bar(self):
+        
+        self.screen.blit(self.health_bar_1, (self.health_bar_x, self.health_bar_y))
+        self.screen.blit(self.health_bar_2, (self.health_bar_x + TILE_SIZE, self.health_bar_y))
+        self.screen.blit(self.health_bar_3, (self.health_bar_x + 2 * TILE_SIZE, self.health_bar_y))
+        pygame.draw.rect(self.screen, (224, 76, 76), self.health_bar_fill)
+
     def horizontal_collisions(self):
         self.player.collision_rect.x += self.player.direction.x * self.player.player_speed
 
@@ -317,10 +326,8 @@ class Level:
         self.enemy_border_collision()
         self.enemy_player_collision()
 
-        # show health bar
-        self.screen.blit(self.health_bar_1, (self.health_bar_x, self.health_bar_y))
-        self.screen.blit(self.health_bar_2, (self.health_bar_x + TILE_SIZE, self.health_bar_y))
-        self.screen.blit(self.health_bar_3, (self.health_bar_x + 2 * TILE_SIZE, self.health_bar_y))
+        # display health bar
+        self.show_health_bar()
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
