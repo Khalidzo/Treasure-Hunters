@@ -5,7 +5,7 @@ A platformer game created by Python using Pygame library
 ## Goal of the game
 Collect as much gold as possible, destroy all the evil enemies, and reach the pirate flag at the end of the map!
 
-## Snippets inside the game
+## Snippets inside the game 📸
 ### Menu - Game transition
 ![menu-game-trans](https://user-images.githubusercontent.com/78038233/220079170-b14d55d3-212d-4048-99b4-627ad2c7be84.gif)
 
