@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 from settings import SCREEN_HEIGHT,SCREEN_WIDTH, TILE_SIZE, HORIZONTAL_TILES, VERTICAL_TILES, CAMERA_BORDERS
 from tile import Tile, StaticTile, AnimatedTile, Coin, Palm, WaterReflection, Sky, Flag, Crate, fg_palm, Cloud, bg_water
 from player import Player
@@ -6,6 +6,8 @@ from enemies import Crabby
 from particles import Particle
 from utils import import_csv, import_sliced_graphics, import_images
 from random import randint, choice
+
+dir_name = os.path.dirname(__file__)
 
 class Level:
     def __init__(self, screen, level_data):
@@ -57,11 +59,11 @@ class Level:
         
         # clouds
         self.cloud_sprites = CameraGroup()
-        self.cloud_imgs = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\clouds')
+        self.cloud_imgs = import_images(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\clouds')
 
         # enemies
-        self.crabby_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\The Crusty Crew\Sprites\Crabby\Run (scaled)')
-        self.crabby_death_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\The Crusty Crew\Sprites\Crabby\09-Dead Hit\Dead Scaled')
+        self.crabby_animations = import_images(dir_name + r'\Treasure Hunters\The Crusty Crew\Sprites\Crabby\Run (scaled)')
+        self.crabby_death_animations = import_images(dir_name + r'\Treasure Hunters\The Crusty Crew\Sprites\Crabby\09-Dead Hit\Dead Scaled')
         self.enemy_layout = import_csv(level_data['enemies'])
         self.enemy_sprites = self.create_tile_group(self.enemy_layout, 'enemy')
 
@@ -77,9 +79,9 @@ class Level:
         # health bar
         self.health_bar_x = 50
         self.health_bar_y = 50
-        self.health_bar_1 = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\1.png').convert_alpha()
-        self.health_bar_2 = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\2.png').convert_alpha()
-        self.health_bar_3 = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\3.png').convert_alpha()
+        self.health_bar_1 = pygame.image.load(dir_name + r'\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\1.png').convert_alpha()
+        self.health_bar_2 = pygame.image.load(dir_name + r'\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\2.png').convert_alpha()
+        self.health_bar_3 = pygame.image.load(dir_name + r'\Treasure Hunters\Wood and Paper UI\Sprites\Life Bars\Big Bars\Health Bar\3.png').convert_alpha()
        
         self.health_bar_fill_x = 83
         self.health_bar_fill_y = 78
@@ -87,28 +89,28 @@ class Level:
         self.health_bar_fill_height = 4
 
         # coin ui
-        self.coin_icon = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\coin.png').convert_alpha()
+        self.coin_icon = pygame.image.load(dir_name + r'\Treasure Hunters\Wood and Paper UI\Sprites\coin.png').convert_alpha()
         self.coint_amount = 0
-        self.font = pygame.font.Font(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\ARCADEPI.ttf', 30)
+        self.font = pygame.font.Font(dir_name + r'\Treasure Hunters\Wood and Paper UI\Sprites\ARCADEPI.ttf', 30)
 
         # music
-        self.background_music = pygame.mixer.Sound(r'D:\My Programs\Treasure Hunter\audio\level_music.wav')
+        self.background_music = pygame.mixer.Sound(dir_name + r'\audio\level_music.wav')
         self.background_music.set_volume(0.05)
 
         # jump effect
-        self.jump_effect = pygame.mixer.Sound(r'D:\My Programs\Treasure Hunter\audio\effects\jump.wav')
+        self.jump_effect = pygame.mixer.Sound(dir_name + r'\audio\effects\jump.wav')
         self.jump_effect.set_volume(0.05)
 
         # coin effect
-        self.coin_effect = pygame.mixer.Sound(r'D:\My Programs\Treasure Hunter\audio\effects\coin.wav')
+        self.coin_effect = pygame.mixer.Sound(dir_name + r'\audio\effects\coin.wav')
         self.coin_effect.set_volume(0.05)
 
         # stomp effect
-        self.stomp_effect = pygame.mixer.Sound(r'D:\My Programs\Treasure Hunter\audio\effects\stomp.wav')
+        self.stomp_effect = pygame.mixer.Sound(dir_name + r'\audio\effects\stomp.wav')
         self.stomp_effect.set_volume(0.05)
 
         # hit effect
-        self.hit_effect = pygame.mixer.Sound(r'D:\My Programs\Treasure Hunter\audio\effects\hit.wav')
+        self.hit_effect = pygame.mixer.Sound(dir_name + r'\audio\effects\hit.wav')
         self.hit_effect.set_volume(0.05)
 
 
@@ -122,17 +124,17 @@ class Level:
                     y = row_index * TILE_SIZE
 
                     if type == 'terrain':
-                        terrain_img_list = import_sliced_graphics(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Terrain\Terrain (64x64).png')
+                        terrain_img_list = import_sliced_graphics(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\Terrain\Terrain (64x64).png')
                         sprite_img = terrain_img_list[int(column)]
                         sprite = StaticTile((x,y), sprite_img)
                         sprite_group.add(sprite)
                     
                     elif type == 'coin':
                         if column == '0':
-                            coin_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Pirate Treasure\Sprites\coins\gold')
+                            coin_animations = import_images(dir_name + r'\Treasure Hunters\Pirate Treasure\Sprites\coins\gold')
                             value = 3
                         else:
-                            coin_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Pirate Treasure\Sprites\coins\silver')
+                            coin_animations = import_images(dir_name + r'\Treasure Hunters\Pirate Treasure\Sprites\coins\silver')
                             value = 1
 
                         sprite = Coin((x,y), coin_animations, value)
@@ -140,56 +142,56 @@ class Level:
                     
                     elif type == 'bg_balm':
                         if column == '1':
-                            balm_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Left')
+                            balm_animations = import_images(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Left')
                             sprite = Palm((x,y), '1', balm_animations)
                         elif column == '2':
-                            balm_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Right')
+                            balm_animations = import_images(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Right')
                             sprite = Palm((x,y), '2', balm_animations)
                         elif column == '3':
-                            balm_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Regular')
+                            balm_animations = import_images(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\Back Palm Trees\Back Palm Tree Regular')
                             sprite = Palm((x,y), '3', balm_animations)
 
                         sprite_group.add(sprite)
                     
                     elif type == 'grass':
-                        grass_img_list = import_sliced_graphics(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\grass\grass.png')
+                        grass_img_list = import_sliced_graphics(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\grass\grass.png')
                         sprite_img = grass_img_list[int(column)]
                         sprite = StaticTile((x,y), sprite_img)
                         sprite_group.add(sprite)
                     
                     elif type == 'bg_water':
-                        sprite_img = pygame.image.load('D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\Additional Water.v1.png').convert()
+                        sprite_img = pygame.image.load(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\Background\Additional Water.v1.png').convert()
                         sprite = bg_water((x,y), sprite_img)
                         sprite_group.add(sprite)
                     
                     elif type == 'water_reflect':
-                        water_reflect_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\Water reflect')
+                        water_reflect_animations = import_images(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\Background\Water reflect')
                         sprite = WaterReflection((x,y), water_reflect_animations)
                         sprite_group.add(sprite)
 
                     elif type == 'sky':
-                        sky_img_list = import_sliced_graphics(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Background\BG Image.v1 (2).png')
+                        sky_img_list = import_sliced_graphics(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\Background\BG Image.v1 (2).png')
                         sprite_img = sky_img_list[int(column)]
                         sprite_img = pygame.transform.scale(sprite_img, (HORIZONTAL_TILES * TILE_SIZE, TILE_SIZE))
                         sprite = Sky((x,y), sprite_img)
                         sprite_group.add(sprite)
 
                     elif type == 'flag':
-                        flag_animations = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Objects\Flag\Flag')
+                        flag_animations = import_images(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\Objects\Flag\Flag')
                         sprite = Flag((x,y), flag_animations)
                         sprite_group.add(sprite)
                     
                     elif type == 'crate':
-                        crate_img = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\Objects\crate.png').convert()
+                        crate_img = pygame.image.load(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\Objects\crate.png').convert()
                         sprite = Crate((x,y), crate_img)
                         sprite_group.add(sprite)
 
                     elif type == 'fg_balm':
                         if column == '0':
-                            balm_animations = import_images('D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\palm_large')
+                            balm_animations = import_images(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\palm_large')
                             sprite = fg_palm((x,y), balm_animations, '0')
                         elif column == '1':
-                            balm_animations = import_images('D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\palm_small')
+                            balm_animations = import_images(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\palm_small')
                             sprite = fg_palm((x,y), balm_animations, '1')
                         sprite_group.add(sprite)
                     

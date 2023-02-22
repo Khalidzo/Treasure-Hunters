@@ -1,7 +1,9 @@
-import pygame
+import pygame, os
 from utils import import_images
 from particles import Particle
 from math import sin
+
+dir_name = os.path.dirname(__file__)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, position, screen, create_jump_particles, play_jump_sound):
@@ -48,16 +50,16 @@ class Player(pygame.sprite.Sprite):
         # player death
         self.dead = False
         self.death_animation_index = 0
-        self.player_death_animations= import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Captain Clown Nose\Sprites\Captain Clown Nose\Captain Clown Nose without Sword\07-Dead Hit (Scaled)')
+        self.player_death_animations= import_images(dir_name + r'\Treasure Hunters\Captain Clown Nose\Sprites\Captain Clown Nose\Captain Clown Nose without Sword\07-Dead Hit (Scaled)')
     def import_dust_animations(self):
         self.dust_animations = {'jump':[], 'land':[], 'run':[]}
         for animation in self.dust_animations.keys():
-            full_path = 'D:\\My Programs\\Treasure Hunter\\Treasure Hunters\\Captain Clown Nose\\Sprites\\Captain Clown Nose\\Captain Clown Nose with Sword\\dust_particles' + '\\' + animation
+            full_path = dir_name + r'\Treasure Hunters\Captain Clown Nose\Sprites\Captain Clown Nose\Captain Clown Nose with Sword\dust_particles' + '\\' + animation
             self.dust_animations[animation] = import_images(full_path)           
 
     def import_animations(self):
         self.animations = {'idle':[], 'jump':[], 'run':[], 'fall':[]}
-        img_path = 'D:\My Programs\Treasure Hunter\Treasure Hunters\Captain Clown Nose\Sprites\Captain Clown Nose\Captain Clown Nose with Sword'
+        img_path = dir_name + r'\Treasure Hunters\Captain Clown Nose\Sprites\Captain Clown Nose\Captain Clown Nose with Sword'
 
         for animation in self.animations.keys():
             full_path = img_path + '\\' + animation

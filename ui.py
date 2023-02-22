@@ -1,8 +1,10 @@
-import pygame
+import pygame, os
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE
 from tile import Cloud
 from random import randint, choice
 from utils import import_images
+
+dir_name = os.path.dirname(__file__)
 
 class Menu:
     def __init__(self, screen, level_play_music):
@@ -12,36 +14,36 @@ class Menu:
         self.play = False
         
         # background
-        self.sky_top = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\sky\sky_top.png').convert()
-        self.sky_middle = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\sky\sky_middle.png').convert()
-        self.sky_bottom = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\sky\sky_bottom.png').convert()
+        self.sky_top = pygame.image.load(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\sky\sky_top.png').convert()
+        self.sky_middle = pygame.image.load(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\sky\sky_middle.png').convert()
+        self.sky_bottom = pygame.image.load(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\sky\sky_bottom.png').convert()
         self.horizon = 7
         
         # board
-        self.board = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Prefabs\3.png').convert_alpha()
+        self.board = pygame.image.load(dir_name + r'\Treasure Hunters\Wood and Paper UI\Sprites\Prefabs\3.png').convert_alpha()
         self.board = pygame.transform.scale(self.board, (500,500))
 
         # icon
-        self.icon = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Prefabs\8.png').convert_alpha()
+        self.icon = pygame.image.load(dir_name + r'\Treasure Hunters\Wood and Paper UI\Sprites\Prefabs\8.png').convert_alpha()
         self.icon = pygame.transform.scale(self.icon, (400,250))
 
         # button
-        self.button = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Green Button\1.png').convert()
+        self.button = pygame.image.load(dir_name + r'\Treasure Hunters\Wood and Paper UI\Sprites\Green Button\1.png').convert()
         self.button = pygame.transform.scale(self.button, (150,150))
         self.button_rect = pygame.Rect(((SCREEN_HEIGHT - 150)/2 + 250, (SCREEN_HEIGHT - 150)/2 + 100), (150,150))
         self.pressed = False
 
         # font
-        self.font = pygame.font.Font(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\ARCADEPI.ttf', 30)
+        self.font = pygame.font.Font(dir_name + r'\Treasure Hunters\Wood and Paper UI\Sprites\ARCADEPI.ttf', 30)
         self.text_1 = self.font.render('main menu', True, 'black')
         self.text_2 = self.font.render('play', True, 'black')
 
         # clouds
         self.cloud_sprites = pygame.sprite.Group()
-        self.cloud_imgs = import_images(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Palm Tree Island\Sprites\clouds')
+        self.cloud_imgs = import_images(dir_name + r'\Treasure Hunters\Palm Tree Island\Sprites\clouds')
 
         # background music
-        self.music = pygame.mixer.Sound(r'D:\My Programs\Treasure Hunter\audio\menu_music.wav')
+        self.music = pygame.mixer.Sound(dir_name + r'\audio\menu_music.wav')
         self.music.set_volume(0.03)
         self.music.play(-1)
 
@@ -72,13 +74,13 @@ class Menu:
         mouse_pos = pygame.mouse.get_pos()
         if self.button_rect.collidepoint(mouse_pos):
             if pygame.mouse.get_pressed()[0]:
-                self.button = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Green Button\1 pressed.png').convert()
+                self.button = pygame.image.load(dir_name + r'\Treasure Hunters\Wood and Paper UI\Sprites\Green Button\1 pressed.png').convert()
                 self.button = pygame.transform.scale(self.button, (150,150))
                 self.pressed = True
                 
             else:
                 if self.pressed:
-                    self.button = pygame.image.load(r'D:\My Programs\Treasure Hunter\Treasure Hunters\Wood and Paper UI\Sprites\Green Button\1.png').convert()
+                    self.button = pygame.image.load(dir_name + r'\Treasure Hunters\Wood and Paper UI\Sprites\Green Button\1.png').convert()
                     self.button = pygame.transform.scale(self.button, (150,150))
                     self.play = True    
                     self.music.stop()

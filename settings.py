@@ -1,17 +1,20 @@
+import os
+dir_name = os.path.dirname(__file__)
+
 level_0 = {
-    'terrain': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_terrain.csv',
-    'bg_palms': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_bg_balms.csv',
-    'fg_balms': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_fg balms.csv',
-    'coins': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_coins.csv',
-    'grass': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_grass.csv',
-    'bg_water': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_horizon.csv',
-    'water_reflect': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_water_reflect.csv',
-    'sky': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_sky.csv',
-    'flag': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_flag.csv',
-    'crate': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_crates.csv',
-    'enemies': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_enemies.csv',
-    'borders': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_borders.csv',
-    'player': r'D:\My Programs\Treasure Hunter\Code\Level\0\terrain_player.csv'
+    'terrain': dir_name + r'\Code\Level\0\terrain_terrain.csv',
+    'bg_palms': dir_name + r'\Code\Level\0\terrain_bg_balms.csv',
+    'fg_balms': dir_name + r'\Code\Level\0\terrain_fg balms.csv',
+    'coins': dir_name + r'\Code\Level\0\terrain_coins.csv',
+    'grass': dir_name + r'\Code\Level\0\terrain_grass.csv',
+    'bg_water': dir_name + r'\Code\Level\0\terrain_horizon.csv',
+    'water_reflect': dir_name + r'\Code\Level\0\terrain_water_reflect.csv',
+    'sky': dir_name + r'\Code\Level\0\terrain_sky.csv',
+    'flag': dir_name + r'\Code\Level\0\terrain_flag.csv',
+    'crate': dir_name + r'\Code\Level\0\terrain_crates.csv',
+    'enemies': dir_name + r'\Code\Level\0\terrain_enemies.csv',
+    'borders': dir_name+ r'\Code\Level\0\terrain_borders.csv',
+    'player': dir_name + r'\Code\Level\0\terrain_player.csv'
 }
 
 HORIZONTAL_TILES = 90
